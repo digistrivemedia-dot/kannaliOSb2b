@@ -30,8 +30,14 @@ export async function toDataUrl(uri: string, maxBytes: number): Promise<string> 
   if (/^https?:\/\//.test(uri) || uri.startsWith("data:")) return uri;
   let last = "";
   for (const attempt of ATTEMPTS) {
-    const image = await ImageManipulator.manipulate(uri).resize({ width: attempt.width }).renderAsync();
-    const result = await image.saveAsync({ compress: attempt.compress, format: SaveFormat.JPEG, base64: true });
+    const image = await ImageManipulator.manipulate(uri)
+      .resize({ width: attempt.width })
+      .renderAsync();
+    const result = await image.saveAsync({
+      compress: attempt.compress,
+      format: SaveFormat.JPEG,
+      base64: true,
+    });
     last = result.base64 ?? "";
     if ((last.length * 3) / 4 <= maxBytes) break;
   }

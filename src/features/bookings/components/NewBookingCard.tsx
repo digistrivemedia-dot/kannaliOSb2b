@@ -2,7 +2,6 @@ import { router } from "expo-router";
 import { Truck } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 
-import { plannedHref } from "@/components/layout/ComingSoon";
 import { CountdownRing } from "@/components/ui/CountdownRing";
 import { PlateChip } from "@/components/ui/PlateChip";
 import { Text } from "@/components/ui/Text";
@@ -16,7 +15,7 @@ import { colors } from "@/lib/theme";
 export function NewBookingCard({ booking }: { booking: Booking }) {
   return (
     <Pressable
-      onPress={() => router.push(plannedHref("G23"))}
+      onPress={() => router.push({ pathname: "/booking/[id]", params: { id: booking.id } })}
       accessibilityRole="button"
       accessibilityLabel={`New booking: ${booking.vehicle.plate}, ${vehicleName(booking.vehicle)}, ${formatWhen(booking.slotAt)}`}
       accessibilityHint="Opens the booking to accept or decline"

@@ -78,7 +78,13 @@ export function ApplicationLookup({ onFound }: { onFound?: () => void }) {
           />
         )}
       />
-      <Button variant="secondary" label="Find my application" onPress={find} loading={formState.isSubmitting} fullWidth />
+      <Button
+        variant="secondary"
+        label="Find my application"
+        onPress={find}
+        loading={formState.isSubmitting}
+        fullWidth
+      />
     </Card>
   );
 }

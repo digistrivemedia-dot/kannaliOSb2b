@@ -14,8 +14,13 @@ import { callPhone } from "@/lib/links";
 /** The top of a job card: plate, vehicle, status, customer (call) and what they asked for. */
 export function JobHero({ job }: { job: JobCard }) {
   const cameIn =
-    job.source === "walk_in" ? "Walk-in" : `Booking${job.bookingNumber ? ` ${job.bookingNumber}` : ""}`;
-  const askedFor = [...(job.bookedServices ?? []).map((service) => service.name), ...job.complaints];
+    job.source === "walk_in"
+      ? "Walk-in"
+      : `Booking${job.bookingNumber ? ` ${job.bookingNumber}` : ""}`;
+  const askedFor = [
+    ...(job.bookedServices ?? []).map((service) => service.name),
+    ...job.complaints,
+  ];
   return (
     <Card className="gap-4">
       <View className="gap-3">

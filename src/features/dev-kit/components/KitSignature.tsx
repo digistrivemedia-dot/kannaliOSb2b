@@ -42,8 +42,24 @@ export function KitSignature() {
         </Card>
       </Section>
       <Section title="Job rows">
-        <JobRow plate="KA01AB1234" vehicle="Honda Activa 6G" customer="Arjun Rao" status="quality_check" age="2 h ago" technician="Imran Khan" nextStep="Start QC" onPress={noop} />
-        <JobRow plate="KA05MN7781" vehicle="Maruti Swift" customer="Lakshmi Narayan" status="awaiting_approval" age="35 min ago" onPress={noop} />
+        <JobRow
+          plate="KA01AB1234"
+          vehicle="Honda Activa 6G"
+          customer="Arjun Rao"
+          status="quality_check"
+          age="2 h ago"
+          technician="Imran Khan"
+          nextStep="Start QC"
+          onPress={noop}
+        />
+        <JobRow
+          plate="KA05MN7781"
+          vehicle="Maruti Swift"
+          customer="Lakshmi Narayan"
+          status="awaiting_approval"
+          age="35 min ago"
+          onPress={noop}
+        />
       </Section>
       <Section title="Count tiles">
         <View className="flex-row gap-3">
@@ -81,7 +97,12 @@ export function KitSignature() {
           <Timeline
             steps={[
               { label: "Vehicle received", when: "14 Nov, 9:10 am", state: "done" },
-              { label: "Waiting for customer approval", when: "14 Nov, 10:02 am", note: "Extra work found", state: "done" },
+              {
+                label: "Waiting for customer approval",
+                when: "14 Nov, 10:02 am",
+                note: "Extra work found",
+                state: "done",
+              },
               { label: "Service in progress", when: "14 Nov, 11:30 am", state: "current" },
             ]}
           />
@@ -89,7 +110,9 @@ export function KitSignature() {
       </Section>
       <Section title="Next step bar">
         <View className="-mx-4 gap-2">
-          <NextStepBar step={{ kind: "action", label: "Record customer's answer", onPress: noop }} />
+          <NextStepBar
+            step={{ kind: "action", label: "Record customer's answer", onPress: noop }}
+          />
           <NextStepBar step={{ kind: "waiting", text: "With billing" }} />
           <NextStepBar step={{ kind: "done", text: "Handed over. Job completed" }} />
         </View>

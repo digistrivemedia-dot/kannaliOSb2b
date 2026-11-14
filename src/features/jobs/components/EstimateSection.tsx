@@ -83,7 +83,11 @@ function LineRow({ line, divided }: { line: EstimateLine; divided: boolean }) {
 function TotalRow({ label, paise, strong }: { label: string; paise: number; strong?: boolean }) {
   return (
     <View className="flex-row justify-between">
-      <Text variant={strong ? "body" : "small"} weight={strong ? "semibold" : "regular"} tone={strong ? "default" : "muted"}>
+      <Text
+        variant={strong ? "body" : "small"}
+        weight={strong ? "semibold" : "regular"}
+        tone={strong ? "default" : "muted"}
+      >
         {label}
       </Text>
       <Text variant={strong ? "heading" : "small"} weight="semibold" tabular>

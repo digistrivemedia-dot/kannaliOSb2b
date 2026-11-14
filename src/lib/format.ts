@@ -133,7 +133,10 @@ const PLATE_MAX_LENGTH = 11;
  * "ka01ab1234" → "KA 01 AB 1234", "22bh1234aa" → "22 BH 1234 AA".
  */
 export function formatPlate(input: string): string {
-  const compact = input.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, PLATE_MAX_LENGTH);
+  const compact = input
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "")
+    .slice(0, PLATE_MAX_LENGTH);
   return compact.replace(/([A-Z])(?=\d)|(\d)(?=[A-Z])/g, "$1$2 ");
 }
 

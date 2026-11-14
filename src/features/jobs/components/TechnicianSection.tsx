@@ -19,9 +19,7 @@ export function TechnicianSection({ job, isDone }: { job: JobCard; isDone: boole
     <Section title="Technician" isDone={isDone}>
       <Card className="gap-4">
         <View className="flex-row items-center gap-3">
-          {job.technician ? (
-            <Avatar name={job.technician.name} />
-          ) : null}
+          {job.technician ? <Avatar name={job.technician.name} /> : null}
           <View className="flex-1">
             <Text weight="semibold">{job.technician?.name ?? "Not assigned yet"}</Text>
             {job.technician && job.status === "approved" ? (

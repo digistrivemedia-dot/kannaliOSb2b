@@ -2,7 +2,6 @@ import { router } from "expo-router";
 import { CalendarCheck, ChevronRight, Truck } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 
-import { plannedHref } from "@/components/layout/ComingSoon";
 import { Section } from "@/components/layout/Section";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -69,7 +68,7 @@ function BookingRow({ booking, divided }: { booking: Booking; divided: boolean }
   const open = () =>
     booking.jobId
       ? router.push({ pathname: "/job/[id]", params: { id: booking.jobId } })
-      : router.push(plannedHref("G23"));
+      : router.push({ pathname: "/booking/[id]", params: { id: booking.id } });
   return (
     <Pressable
       onPress={open}

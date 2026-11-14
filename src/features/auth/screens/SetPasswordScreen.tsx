@@ -42,7 +42,9 @@ export function SetPasswordScreen() {
       setIsDone(true);
     } catch (error) {
       if (error instanceof ApiError && error.code === "RESET_TOKEN_INVALID") {
-        setFormError("This link has been used or has run out. Ask for a new one from Forgot password.");
+        setFormError(
+          "This link has been used or has run out. Ask for a new one from Forgot password.",
+        );
         return;
       }
       setFormError(applyApiErrors(error, ["password"], setError));
@@ -73,7 +75,12 @@ export function SetPasswordScreen() {
       header={<Header title="Set your password" />}
       bottomBar={
         <BottomBar>
-          <Button size="main" label="Set password" onPress={submit} loading={formState.isSubmitting} />
+          <Button
+            size="main"
+            label="Set password"
+            onPress={submit}
+            loading={formState.isSubmitting}
+          />
         </BottomBar>
       }
     >

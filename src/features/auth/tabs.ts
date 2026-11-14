@@ -3,15 +3,7 @@ import type { Role } from "@/features/auth/types";
 import type { BusinessType } from "@/features/company/types";
 
 export type TabKey =
-  | "today"
-  | "jobs"
-  | "my-jobs"
-  | "bookings"
-  | "shop"
-  | "orders"
-  | "trips"
-  | "home"
-  | "more";
+  "today" | "jobs" | "my-jobs" | "bookings" | "shop" | "orders" | "trips" | "home" | "more";
 
 /** The fixed order of the garage tabs, for people with several roles (CLAUDE.md §3). */
 const GARAGE_ORDER: TabKey[] = ["today", "jobs", "my-jobs", "bookings", "shop", "orders", "trips"];

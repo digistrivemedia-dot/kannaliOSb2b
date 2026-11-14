@@ -8,7 +8,12 @@ import { firstName, indiaHour } from "@/lib/format";
  * The jobs that can need someone at the desk, most urgent kind first (APP-SCREENS G20): estimates the
  * customer answered, vehicles ready for QC, then bills to make and bills unpaid.
  */
-export const NEEDS_YOU_STATUSES: JobStatus[] = ["approved", "quality_check", "ready", "payment_pending"];
+export const NEEDS_YOU_STATUSES: JobStatus[] = [
+  "approved",
+  "quality_check",
+  "ready",
+  "payment_pending",
+];
 
 /** The jobs whose next step this user takes themselves, in the order above. */
 export function jobsNeedingYou(jobs: JobCardSummary[], roles: readonly Role[]): JobNeedingYou[] {

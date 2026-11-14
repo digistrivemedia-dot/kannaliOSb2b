@@ -92,6 +92,19 @@ export default function RootLayout() {
             <Stack.Protected guard={isSignedIn}>
               <Stack.Screen name="(tabs)" options={{ statusBarStyle: "light" }} />
               <Stack.Screen name="job/[id]" />
+              <Stack.Screen name="booking/[id]/index" />
+              <Stack.Screen
+                name="booking/[id]/decline"
+                options={{ ...sheet, sheetAllowedDetents: [0.75, 1] }}
+              />
+              <Stack.Screen
+                name="booking-alert/[id]"
+                options={{
+                  presentation: "fullScreenModal",
+                  statusBarStyle: "light",
+                  animation: "fade",
+                }}
+              />
               <Stack.Screen name="coming-soon" />
               <Stack.Screen name="sheets/select" options={sheet} />
               <Stack.Screen name="branch-switcher" options={sheet} />

@@ -19,7 +19,6 @@ export function callPhone(e164: string) {
 /** Opens an address in the phone's maps app. */
 export function openInMaps(address: string) {
   const query = encodeURIComponent(address);
-  const url =
-    Platform.OS === "ios" ? `https://maps.apple.com/?q=${query}` : `geo:0,0?q=${query}`;
+  const url = Platform.OS === "ios" ? `https://maps.apple.com/?q=${query}` : `geo:0,0?q=${query}`;
   return open(url, "Couldn't open maps on this phone.");
 }

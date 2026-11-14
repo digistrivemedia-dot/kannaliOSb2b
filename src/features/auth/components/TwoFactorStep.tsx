@@ -64,13 +64,23 @@ export function TwoFactorStep({ challenge, onBack }: TwoFactorStepProps) {
       }
       bottomBar={
         <BottomBar>
-          <Button size="main" label="Verify and sign in" onPress={verify} loading={formState.isSubmitting} />
+          <Button
+            size="main"
+            label="Verify and sign in"
+            onPress={verify}
+            loading={formState.isSubmitting}
+          />
           <Button variant="ghost" label="Use another account" onPress={onBack} fullWidth />
         </BottomBar>
       }
     >
       {formError ? <FormAlert message={formError} /> : null}
-      <Button variant="ghost" label="Send a new code" onPress={() => void resend()} loading={isResending} />
+      <Button
+        variant="ghost"
+        label="Send a new code"
+        onPress={() => void resend()}
+        loading={isResending}
+      />
       <Controller
         control={control}
         name="code"

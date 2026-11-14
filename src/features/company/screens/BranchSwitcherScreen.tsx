@@ -28,7 +28,11 @@ export function BranchSwitcherScreen() {
           <Skeleton className="h-12 w-full" />
         </View>
       ) : branches.isError ? (
-        <ErrorState error={branches.error} onRetry={() => void branches.refetch()} what="the branches" />
+        <ErrorState
+          error={branches.error}
+          onRetry={() => void branches.refetch()}
+          what="the branches"
+        />
       ) : (
         <ScrollView contentContainerClassName="pb-8" accessibilityRole="radiogroup">
           {branches.data.map((branch) => {

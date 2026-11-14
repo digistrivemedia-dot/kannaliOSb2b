@@ -39,7 +39,11 @@ export function Header({ title, subtitle, actions, showBack = true }: HeaderProp
           </Text>
         ) : null}
       </View>
-      {actions ? <View className="flex-row items-center">{actions}</View> : <View className="w-3" />}
+      {actions ? (
+        <View className="flex-row items-center">{actions}</View>
+      ) : (
+        <View className="w-3" />
+      )}
     </View>
   );
 }

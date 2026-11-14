@@ -30,7 +30,13 @@ export function ErrorState({ error, onRetry, retrying, what = "this" }: ErrorSta
       <Text tone="muted" className="text-center">
         {errorMessage(error)}
       </Text>
-      <Button label="Try again" onPress={onRetry} loading={retrying} variant="secondary" className="mt-2" />
+      <Button
+        label="Try again"
+        onPress={onRetry}
+        loading={retrying}
+        variant="secondary"
+        className="mt-2"
+      />
     </View>
   );
 }

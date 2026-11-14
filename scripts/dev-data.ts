@@ -27,7 +27,8 @@ const STAFF = {
 const HSR = "br-hsr";
 const WHITEFIELD = "br-whitefield";
 /** A 1 × 1 PNG: the API stores photos sent inline, and this is the smallest one it accepts. */
-const PHOTO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+const PHOTO =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
 type Json = Record<string, unknown>;
 type Surface = "b2b" | "b2c" | "admin";
@@ -53,7 +54,9 @@ async function api<T = Json>(
   const text = await response.text();
   const data = text ? (JSON.parse(text) as T) : (undefined as T);
   if (!response.ok) {
-    throw new ApiFailure(`${options.method ?? "POST"} /${surface}${path} → ${response.status} ${text}`);
+    throw new ApiFailure(
+      `${options.method ?? "POST"} /${surface}${path} → ${response.status} ${text}`,
+    );
   }
   return data;
 }
@@ -61,16 +64,16 @@ async function api<T = Json>(
 // ---------------------------------------------------------------- sign-in
 
 async function signIn(email: string): Promise<string> {
-  const result = await api<Json>("b2b", "/auth/sign-in", { body: { email, password: PASSWORD } }).catch(
-    async (error: unknown) => {
-      // A 2-step code was sent moments ago (an earlier run): wait as long as the backend asks, once.
-      const wait = error instanceof Error ? /Wait (d+) seconds/.exec(error.message)?.[1] : undefined;
-      if (!wait) throw error;
-      say(`Waiting ${wait} s for the next 2-step code…`);
-      await new Promise((resolve) => setTimeout(resolve, (Number(wait) + 1) * 1000));
-      return api<Json>("b2b", "/auth/sign-in", { body: { email, password: PASSWORD } });
-    },
-  );
+  const result = await api<Json>("b2b", "/auth/sign-in", {
+    body: { email, password: PASSWORD },
+  }).catch(async (error: unknown) => {
+    // A 2-step code was sent moments ago (an earlier run): wait as long as the backend asks, once.
+    const wait = error instanceof Error ? /Wait (d+) seconds/.exec(error.message)?.[1] : undefined;
+    if (!wait) throw error;
+    say(`Waiting ${wait} s for the next 2-step code…`);
+    await new Promise((resolve) => setTimeout(resolve, (Number(wait) + 1) * 1000));
+    return api<Json>("b2b", "/auth/sign-in", { body: { email, password: PASSWORD } });
+  });
   if (result.status === "signed_in") return String(result.sessionToken);
   const code = await twoStepCode(email);
   if (!code) throw new ApiFailure(`${email} needs a 2-step code`);
@@ -88,7 +91,9 @@ async function twoStepCode(email: string): Promise<string | null> {
     const startSize = statSync(logFile).size;
     for (let attempt = 0; attempt < 20; attempt += 1) {
       // Bytes, not characters: the log has multi-byte text such as "₹".
-      const added = readFileSync(logFile).subarray(Math.max(0, startSize - 4000)).toString("utf8");
+      const added = readFileSync(logFile)
+        .subarray(Math.max(0, startSize - 4000))
+        .toString("utf8");
       const codes = [...added.matchAll(/(\d{6}) is your SpareX Business sign-in code/g)];
       const code = codes.at(-1)?.[1];
       if (code) return code;
@@ -113,8 +118,34 @@ async function adminToken(): Promise<string> {
 
 // ---------------------------------------------------------------- people and vehicles
 
-const FIRST = ["Arjun", "Lakshmi", "Naveen", "Priya", "Suresh", "Kavya", "Manjunath", "Divya", "Rahul", "Asha", "Kiran", "Sneha", "Prakash", "Meena"];
-const LAST = ["Rao", "Narayan", "Gowda", "Shetty", "Reddy", "Hegde", "Kumar", "Iyer", "Nair", "Bhat"];
+const FIRST = [
+  "Arjun",
+  "Lakshmi",
+  "Naveen",
+  "Priya",
+  "Suresh",
+  "Kavya",
+  "Manjunath",
+  "Divya",
+  "Rahul",
+  "Asha",
+  "Kiran",
+  "Sneha",
+  "Prakash",
+  "Meena",
+];
+const LAST = [
+  "Rao",
+  "Narayan",
+  "Gowda",
+  "Shetty",
+  "Reddy",
+  "Hegde",
+  "Kumar",
+  "Iyer",
+  "Nair",
+  "Bhat",
+];
 const VEHICLES: { type: "bike" | "scooter"; make: string; model: string }[] = [
   { type: "scooter", make: "Honda", model: "Activa 6G" },
   { type: "scooter", make: "TVS", model: "Jupiter" },
@@ -136,7 +167,8 @@ const digits = (length: number) =>
   Array.from({ length }, () => Math.floor(Math.random() * 10)).join("");
 const letters = (length: number) =>
   Array.from({ length }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join("");
-const plate = () => `KA ${String(1 + Math.floor(Math.random() * 60)).padStart(2, "0")} ${letters(2)} ${digits(4)}`;
+const plate = () =>
+  `KA ${String(1 + Math.floor(Math.random() * 60)).padStart(2, "0")} ${letters(2)} ${digits(4)}`;
 const person = () => `${pick(FIRST)} ${LAST[Math.floor(Math.random() * LAST.length)]}`;
 const mobile = () => `9${digits(9)}`;
 
@@ -158,16 +190,58 @@ const INSPECTION = [
   { area: "Electricals", name: "Lights and indicators", result: "ok" },
   { area: "Electricals", name: "Battery and self start", result: "ok" },
   { area: "Tyres and wheels", name: "Front tyre tread and pressure", result: "ok" },
-  { area: "Chain and transmission", name: "Chain slack and wear", result: "attention", note: "Needs adjusting" },
+  {
+    area: "Chain and transmission",
+    name: "Chain slack and wear",
+    result: "attention",
+    note: "Needs adjusting",
+  },
   { area: "Suspension and body", name: "Front forks", result: "ok" },
 ];
 
 const LINES = [
-  { id: "l1", kind: "service", description: "General service", quantity: 1, unitPriceInPaise: 75000, gstRatePercent: 18 },
-  { id: "l2", kind: "part", description: "Engine oil 10W-30, 1 L", partNumber: "CAS10W301L", quantity: 1, unitPriceInPaise: 42000, gstRatePercent: 18 },
-  { id: "l3", kind: "part", description: "Front brake pads", partNumber: "BRP-ACT6G-F", quantity: 1, unitPriceInPaise: 38000, gstRatePercent: 18 },
-  { id: "l4", kind: "labour", description: "Chain clean and adjust", quantity: 1, unitPriceInPaise: 15000, gstRatePercent: 18 },
-  { id: "l5", kind: "consumable", description: "Chain lube", quantity: 1, unitPriceInPaise: 9000, gstRatePercent: 18 },
+  {
+    id: "l1",
+    kind: "service",
+    description: "General service",
+    quantity: 1,
+    unitPriceInPaise: 75000,
+    gstRatePercent: 18,
+  },
+  {
+    id: "l2",
+    kind: "part",
+    description: "Engine oil 10W-30, 1 L",
+    partNumber: "CAS10W301L",
+    quantity: 1,
+    unitPriceInPaise: 42000,
+    gstRatePercent: 18,
+  },
+  {
+    id: "l3",
+    kind: "part",
+    description: "Front brake pads",
+    partNumber: "BRP-ACT6G-F",
+    quantity: 1,
+    unitPriceInPaise: 38000,
+    gstRatePercent: 18,
+  },
+  {
+    id: "l4",
+    kind: "labour",
+    description: "Chain clean and adjust",
+    quantity: 1,
+    unitPriceInPaise: 15000,
+    gstRatePercent: 18,
+  },
+  {
+    id: "l5",
+    kind: "consumable",
+    description: "Chain lube",
+    quantity: 1,
+    unitPriceInPaise: 9000,
+    gstRatePercent: 18,
+  },
 ];
 
 /** Every status a walk-in can reach, in the order the steps happen. */
@@ -202,16 +276,23 @@ async function walkIn(desk: Desk, target: Stage) {
     token: desk.manager,
     body: {
       branchId: desk.branchId,
-      newVehicle: { plate: plate(), ...vehicle, customer: { name: person(), phone: `+91${mobile()}` } },
+      newVehicle: {
+        plate: plate(),
+        ...vehicle,
+        customer: { name: person(), phone: `+91${mobile()}` },
+      },
       complaints: [pick(COMPLAINTS)],
     },
   });
   const id = String(job.id);
   const reach = (stage: (typeof STAGES)[number]) =>
-    target === "closed" ? STAGES.indexOf(stage) <= STAGES.indexOf("awaiting_approval")
-      : target === "extra_work" ? STAGES.indexOf(stage) <= STAGES.indexOf("in_progress")
-        : target === "rework" ? STAGES.indexOf(stage) <= STAGES.indexOf("quality_check")
-        : STAGES.indexOf(stage) <= STAGES.indexOf(target);
+    target === "closed"
+      ? STAGES.indexOf(stage) <= STAGES.indexOf("awaiting_approval")
+      : target === "extra_work"
+        ? STAGES.indexOf(stage) <= STAGES.indexOf("in_progress")
+        : target === "rework"
+          ? STAGES.indexOf(stage) <= STAGES.indexOf("quality_check")
+          : STAGES.indexOf(stage) <= STAGES.indexOf(target);
   const at = (path: string, token: string, body: unknown, method = "POST") =>
     api("b2b", `/garage/jobs/${id}${path}`, { token, body, method });
 
@@ -225,9 +306,14 @@ async function walkIn(desk: Desk, target: Stage) {
     });
   }
   if (reach("inspection")) {
-    await at("/inspection", desk.manager, {
-      items: INSPECTION.map((item, index) => ({ id: `i${index + 1}`, photos: [], ...item })),
-    }, "PUT");
+    await at(
+      "/inspection",
+      desk.manager,
+      {
+        items: INSPECTION.map((item, index) => ({ id: `i${index + 1}`, photos: [], ...item })),
+      },
+      "PUT",
+    );
   }
   if (reach("awaiting_approval")) await at("/estimate", desk.manager, { lines: LINES });
   if (target === "closed") {
@@ -239,31 +325,56 @@ async function walkIn(desk: Desk, target: Stage) {
   }
   if (reach("approved")) {
     await at("/estimate/approval", desk.manager, {
-      decisions: Object.fromEntries(LINES.map((line) => [line.id, line.id === "l4" ? "rejected" : "approved"])),
+      decisions: Object.fromEntries(
+        LINES.map((line) => [line.id, line.id === "l4" ? "rejected" : "approved"]),
+      ),
       note: "By phone",
     });
   }
-  if (reach("assigned")) await at("/technician", desk.manager, { technicianId: desk.technicianId }, "PUT");
+  if (reach("assigned"))
+    await at("/technician", desk.manager, { technicianId: desk.technicianId }, "PUT");
   if (reach("in_progress")) {
     await at("/response", desk.technician, { accept: true });
     await at("/lines/l1", desk.technician, { isDone: true }, "PATCH");
-    await at("/progress", desk.technician, { text: "Old oil drained, service started", photos: [PHOTO], isExtraWork: false });
+    await at("/progress", desk.technician, {
+      text: "Old oil drained, service started",
+      photos: [PHOTO],
+      isExtraWork: false,
+    });
   }
   if (target === "extra_work") {
-    await at("/progress", desk.technician, { text: "Rear tyre is worn out, needs replacing", photos: [PHOTO], isExtraWork: true });
+    await at("/progress", desk.technician, {
+      text: "Rear tyre is worn out, needs replacing",
+      photos: [PHOTO],
+      isExtraWork: true,
+    });
     await at("/estimate/revision", desk.manager, {
-      lines: [{ id: "x1", kind: "part", description: "Rear tyre 90/100-10", partNumber: "MRF-NYLO-90", quantity: 1, unitPriceInPaise: 165000, gstRatePercent: 28 }],
+      lines: [
+        {
+          id: "x1",
+          kind: "part",
+          description: "Rear tyre 90/100-10",
+          partNumber: "MRF-NYLO-90",
+          quantity: 1,
+          unitPriceInPaise: 165000,
+          gstRatePercent: 28,
+        },
+      ],
     });
     return say(`  walk-in ${job.number}: extra work found, waiting for the customer again`);
   }
   if (reach("quality_check")) {
-    for (const line of ["l2", "l3", "l5"]) await at(`/lines/${line}`, desk.technician, { isDone: true }, "PATCH");
+    for (const line of ["l2", "l3", "l5"])
+      await at(`/lines/${line}`, desk.technician, { isDone: true }, "PATCH");
     await at("/finish", desk.technician, {});
   }
   if (target === "rework") {
     await at("/quality-check", desk.manager, {
       result: "rework",
-      items: [{ label: "Road test done", isOk: true }, { label: "Brakes bite evenly", isOk: false }],
+      items: [
+        { label: "Road test done", isOk: true },
+        { label: "Brakes bite evenly", isOk: false },
+      ],
       note: "Front brake still soft, bleed it again",
     });
     return say(`  walk-in ${job.number}: sent back after QC (in progress)`);
@@ -271,20 +382,28 @@ async function walkIn(desk: Desk, target: Stage) {
   if (reach("ready")) {
     await at("/quality-check", desk.manager, {
       result: "pass",
-      items: ["Road test done", "No oil or fuel leaks", "Brakes bite evenly", "Vehicle washed and cleaned"].map(
-        (label) => ({ label, isOk: true }),
-      ),
+      items: [
+        "Road test done",
+        "No oil or fuel leaks",
+        "Brakes bite evenly",
+        "Vehicle washed and cleaned",
+      ].map((label) => ({ label, isOk: true })),
     });
   }
   if (reach("payment_pending")) {
-    if (!desk.billing) return say(`  walk-in ${job.number}: ready (billing needs the owner, skipped)`);
+    if (!desk.billing)
+      return say(`  walk-in ${job.number}: ready (billing needs the owner, skipped)`);
     await at("/invoice", desk.billing, {});
   }
-  if (reach("paid") && desk.billing) await at("/payment", desk.billing, { method: "online", reference: `UPI${digits(10)}` });
+  if (reach("paid") && desk.billing)
+    await at("/payment", desk.billing, { method: "online", reference: `UPI${digits(10)}` });
   if (reach("completed") && desk.billing) {
     await at("/handover", desk.manager, {
       odometerKm: 40000,
-      checklist: [{ label: "Old parts handed over", isDone: true }, { label: "Bill explained", isDone: true }],
+      checklist: [
+        { label: "Old parts handed over", isDone: true },
+        { label: "Bill explained", isDone: true },
+      ],
       nextService: { odometerKm: 43000 },
       photos: [PHOTO],
     });
@@ -304,10 +423,9 @@ async function customer(): Promise<Customer> {
     body: { mobile: phone, otp: otp.demoCode, name },
   });
   const token = String(verified.token);
-  const catalog = await api<{ models: { id: string; name: string; type: string; variants: { id: string }[] }[] }>(
-    "b2c",
-    "/vehicles/catalog",
-  );
+  const catalog = await api<{
+    models: { id: string; name: string; type: string; variants: { id: string }[] }[];
+  }>("b2c", "/vehicles/catalog");
   const model = catalog.models.find((entry) => entry.name === "Activa 6G") ?? catalog.models[0];
   if (!model) throw new ApiFailure("No vehicle models in the catalogue");
   const vehicle = await api<Json>("b2c", "/me/vehicles", {
@@ -380,8 +498,15 @@ async function bookings(manager: string, driverId: string) {
   // Accepted with pick-up and drop, and a driver on the way.
   await book({ days: 0, slot: "15:00-18:00", pickup: true });
   const withPickup = await newestNewBooking(manager);
-  const job = await api<Json>("b2b", `/garage/bookings/${withPickup.id}/accept`, { token: manager, body: {} });
-  await api("b2b", `/garage/jobs/${job.id}/trips/pickup`, { token: manager, method: "PUT", body: { driverId } });
+  const job = await api<Json>("b2b", `/garage/bookings/${withPickup.id}/accept`, {
+    token: manager,
+    body: {},
+  });
+  await api("b2b", `/garage/jobs/${job.id}/trips/pickup`, {
+    token: manager,
+    method: "PUT",
+    body: { driverId },
+  });
   say(`  booking ${withPickup.number}: accepted, pick-up driver on the way`);
 
   await book({ days: 0, slot: "12:00-15:00", pickup: false });
@@ -404,18 +529,20 @@ async function bookings(manager: string, driverId: string) {
 }
 
 async function oneNewBooking() {
-  const { customer: name } = await book({ days: 0, slot: "15:00-18:00", pickup: Math.random() > 0.5 });
+  const { customer: name } = await book({
+    days: 0,
+    slot: "15:00-18:00",
+    pickup: Math.random() > 0.5,
+  });
   say(`New booking from ${name} sent to HSR Layout. It waits 2 minutes for an answer.`);
 }
 
 // ---------------------------------------------------------------- buying
 
 async function buying(buyer: string) {
-  const products = await api<{ items: { id: string; stockByBranch: { branchId: string; quantity: number }[] }[] }>(
-    "b2b",
-    "/catalog/products?pageSize=50",
-    { token: buyer },
-  );
+  const products = await api<{
+    items: { id: string; stockByBranch: { branchId: string; quantity: number }[] }[];
+  }>("b2b", "/catalog/products?pageSize=50", { token: buyer });
   const inStock = products.items.filter((product) =>
     product.stockByBranch.some((stock) => stock.branchId === HSR && stock.quantity >= 25),
   );
@@ -434,17 +561,31 @@ async function buying(buyer: string) {
   const waiting = await order([{ productId: a.id, quantity: 2 }], `PO-${digits(4)}`);
   say(`  order ${waiting.number}: bank transfer waiting for Kannali`);
   const delivered = await order(
-    [{ productId: b.id, quantity: 4 }, { productId: c.id, quantity: 1 }],
+    [
+      { productId: b.id, quantity: 4 },
+      { productId: c.id, quantity: 1 },
+    ],
     `PO-${digits(4)}`,
   );
 
   const quoted = await api<Json>("b2b", "/quotations", {
     token: buyer,
-    body: { branchId: HSR, notes: "Monthly stock for the workshop", items: [{ productId: a.id, quantity: 10 }, { productId: c.id, quantity: 6 }] },
+    body: {
+      branchId: HSR,
+      notes: "Monthly stock for the workshop",
+      items: [
+        { productId: a.id, quantity: 10 },
+        { productId: c.id, quantity: 6 },
+      ],
+    },
   });
   const requested = await api<Json>("b2b", "/quotations", {
     token: buyer,
-    body: { branchId: HSR, notes: "Need these by Friday", items: [{ productId: b.id, quantity: 20 }] },
+    body: {
+      branchId: HSR,
+      notes: "Need these by Friday",
+      items: [{ productId: b.id, quantity: 20 }],
+    },
   });
   say(`  quotation ${requested.number}: requested`);
 
@@ -457,15 +598,18 @@ async function buying(buyer: string) {
   for (const status of ["confirmed", "processing", "packed", "shipped", "delivered"]) {
     await api("admin", `/orders/${delivered.id}/status`, {
       token: admin,
-      body: { status, shipment: status === "shipped" ? { courier: "Delhivery", trackingNumber: digits(12) } : null },
+      body: {
+        status,
+        shipment:
+          status === "shipped" ? { courier: "Delhivery", trackingNumber: digits(12) } : null,
+      },
     }).catch(() => undefined);
   }
   say(`  order ${delivered.number}: paid and delivered (returns can be asked for)`);
-  const detail = await api<{ lines?: { id: string; productId: string; quantity: number }[]; items?: { id: string; productId: string; quantity: number }[] }>(
-    "admin",
-    `/quotations/${quoted.id}`,
-    { token: admin },
-  );
+  const detail = await api<{
+    lines?: { id: string; productId: string; quantity: number }[];
+    items?: { id: string; productId: string; quantity: number }[];
+  }>("admin", `/quotations/${quoted.id}`, { token: admin });
   const lines = (detail.lines ?? detail.items ?? []).map((line) => ({
     id: line.id,
     productId: line.productId,
@@ -507,21 +651,59 @@ async function main() {
     say(`Owner sign-in: ${error instanceof Error ? error.message : String(error)}`);
     return null;
   });
-  say(owner ? "Signed in the owner too: billing steps and Whitefield jobs included." : "No owner sign-in: billing steps and Whitefield jobs skipped.");
+  say(
+    owner
+      ? "Signed in the owner too: billing steps and Whitefield jobs included."
+      : "No owner sign-in: billing steps and Whitefield jobs skipped.",
+  );
 
   say("Bookings at HSR Layout (from the customer app):");
   await step("bookings", () => bookings(manager, hsrTechnicianId));
 
   say("Walk-ins at HSR Layout:");
-  const hsr: Desk = { branchId: HSR, manager, technician: hsrTechnician, technicianId: hsrTechnicianId, billing: owner };
-  const targets: Stage[] = ["vehicle_received", "job_card_created", "inspection", "awaiting_approval", "approved", "assigned", "in_progress", "extra_work", "rework", "quality_check", "ready", "payment_pending", "paid", "completed", "closed"];
+  const hsr: Desk = {
+    branchId: HSR,
+    manager,
+    technician: hsrTechnician,
+    technicianId: hsrTechnicianId,
+    billing: owner,
+  };
+  const targets: Stage[] = [
+    "vehicle_received",
+    "job_card_created",
+    "inspection",
+    "awaiting_approval",
+    "approved",
+    "assigned",
+    "in_progress",
+    "extra_work",
+    "rework",
+    "quality_check",
+    "ready",
+    "payment_pending",
+    "paid",
+    "completed",
+    "closed",
+  ];
   for (const target of targets) await step(`walk-in (${target})`, () => walkIn(hsr, target));
 
   if (owner) {
     say("Walk-ins at Whitefield (owner as the desk, Imran as technician):");
     const technician = await signIn(STAFF.technician);
-    const whitefield: Desk = { branchId: WHITEFIELD, manager: owner, technician, technicianId: await staffId(technician), billing: owner };
-    for (const target of ["assigned", "in_progress", "quality_check", "ready", "payment_pending"] as Stage[]) {
+    const whitefield: Desk = {
+      branchId: WHITEFIELD,
+      manager: owner,
+      technician,
+      technicianId: await staffId(technician),
+      billing: owner,
+    };
+    for (const target of [
+      "assigned",
+      "in_progress",
+      "quality_check",
+      "ready",
+      "payment_pending",
+    ] as Stage[]) {
       await step(`Whitefield walk-in (${target})`, () => walkIn(whitefield, target));
     }
   }

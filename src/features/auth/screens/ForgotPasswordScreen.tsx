@@ -42,8 +42,17 @@ export function ForgotPasswordScreen() {
         header={<Header title="Check your email" />}
         bottomBar={
           <BottomBar>
-            <Button size="main" label="I have the link" onPress={() => router.replace("/set-password")} />
-            <Button variant="ghost" label="Back to sign in" onPress={() => router.back()} fullWidth />
+            <Button
+              size="main"
+              label="I have the link"
+              onPress={() => router.replace("/set-password")}
+            />
+            <Button
+              variant="ghost"
+              label="Back to sign in"
+              onPress={() => router.back()}
+              fullWidth
+            />
           </BottomBar>
         }
       >
@@ -61,11 +70,18 @@ export function ForgotPasswordScreen() {
       header={<Header title="Forgot password" />}
       bottomBar={
         <BottomBar>
-          <Button size="main" label="Send reset link" onPress={submit} loading={formState.isSubmitting} />
+          <Button
+            size="main"
+            label="Send reset link"
+            onPress={submit}
+            loading={formState.isSubmitting}
+          />
         </BottomBar>
       }
     >
-      <Text tone="muted">Enter your business email. We'll send you a link to set a new password.</Text>
+      <Text tone="muted">
+        Enter your business email. We'll send you a link to set a new password.
+      </Text>
       {formError ? <FormAlert message={formError} /> : null}
       <Controller
         control={control}

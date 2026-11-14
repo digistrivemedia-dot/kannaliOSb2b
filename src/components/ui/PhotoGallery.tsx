@@ -17,7 +17,11 @@ export function PhotoGallery({ photos, label }: PhotoGalleryProps) {
   if (photos.length === 0) return null;
   return (
     <>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerClassName="gap-2"
+      >
         {photos.map((uri, index) => (
           <Pressable
             key={`${index}-${uri}`}
@@ -30,7 +34,12 @@ export function PhotoGallery({ photos, label }: PhotoGalleryProps) {
           </Pressable>
         ))}
       </ScrollView>
-      <PhotoViewer photos={photos} startIndex={openAt} onClose={() => setOpenAt(null)} label={label} />
+      <PhotoViewer
+        photos={photos}
+        startIndex={openAt}
+        onClose={() => setOpenAt(null)}
+        label={label}
+      />
     </>
   );
 }

@@ -56,7 +56,11 @@ export const newPasswordSchema = z
 export type NewPasswordValues = z.infer<typeof newPasswordSchema>;
 
 export const applicationLookupSchema = z.object({
-  ref: z.string().trim().toUpperCase().regex(/^APP-\d{4}-\d{4,}$/, "Enter the reference, like APP-2026-0031."),
+  ref: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^APP-\d{4}-\d{4,}$/, "Enter the reference, like APP-2026-0031."),
   key: z.string().trim().min(6, "Enter the access key from your application email."),
 });
 
@@ -73,7 +77,9 @@ export const registerSchema = z.object({
   pan: panField.or(z.literal("")),
   licenceNumber: z.string().trim().max(40, "Keep it to 40 characters or fewer."),
   otherRegistration: z.string().trim().max(40, "Keep it to 40 characters or fewer."),
-  documents: z.array(z.string()).max(MAX_DOCUMENT_PHOTOS, `Add up to ${MAX_DOCUMENT_PHOTOS} photos.`),
+  documents: z
+    .array(z.string())
+    .max(MAX_DOCUMENT_PHOTOS, `Add up to ${MAX_DOCUMENT_PHOTOS} photos.`),
   // Step 2: contact and location
   contactName: z.string().trim(),
   email: emailField,
@@ -98,11 +104,28 @@ export type RegisterValues = z.infer<typeof registerSchema>;
 export const REGISTER_STEPS = [
   {
     title: "Your business",
-    fields: ["businessName", "businessType", "gstin", "pan", "licenceNumber", "otherRegistration", "documents"],
+    fields: [
+      "businessName",
+      "businessType",
+      "gstin",
+      "pan",
+      "licenceNumber",
+      "otherRegistration",
+      "documents",
+    ],
   },
   {
     title: "Contact and location",
-    fields: ["contactName", "email", "mobile", "addressLine1", "addressLine2", "pin", "city", "state"],
+    fields: [
+      "contactName",
+      "email",
+      "mobile",
+      "addressLine1",
+      "addressLine2",
+      "pin",
+      "city",
+      "state",
+    ],
   },
   { title: "Shop photos", fields: ["photos"] },
   { title: "Check and send", fields: ["acceptTerms"] },

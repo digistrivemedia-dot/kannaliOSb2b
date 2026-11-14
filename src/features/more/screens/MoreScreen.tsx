@@ -49,7 +49,12 @@ export function MoreScreen() {
       <Section title="Account">
         <Card flush>
           {__DEV__ && (
-            <ListRow title="Design kit" subtitle="Every component, for developers" icon={Palette} onPress={() => router.push("/dev/kit")} />
+            <ListRow
+              title="Design kit"
+              subtitle="Every component, for developers"
+              icon={Palette}
+              onPress={() => router.push("/dev/kit")}
+            />
           )}
           <ListRow
             title={isSigningOut ? "Signing out…" : "Sign out"}

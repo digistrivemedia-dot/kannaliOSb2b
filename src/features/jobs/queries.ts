@@ -16,7 +16,10 @@ type ListOptions = {
   live?: boolean;
 };
 
-export function useJobCards(filters: JobCardFilters, { enabled = true, live = false }: ListOptions = {}) {
+export function useJobCards(
+  filters: JobCardFilters,
+  { enabled = true, live = false }: ListOptions = {},
+) {
   return useQuery({
     queryKey: jobKeys.list(filters),
     queryFn: () => getJobCards(filters),

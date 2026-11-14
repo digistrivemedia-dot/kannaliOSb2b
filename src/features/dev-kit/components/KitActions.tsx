@@ -20,7 +20,11 @@ export function KitActions() {
         <Button label="Outline" variant="outline" onPress={noop} />
         <Button label="Ghost" variant="ghost" onPress={noop} />
         <Button label="Decline booking" variant="destructive" onPress={noop} />
-        <Button label="Show a toast" variant="outline" onPress={() => showToast({ message: "Technician assigned" })} />
+        <Button
+          label="Show a toast"
+          variant="outline"
+          onPress={() => showToast({ message: "Technician assigned" })}
+        />
         <Button
           label="Show an error toast"
           variant="outline"

@@ -12,7 +12,10 @@ type StepProps = {
   setValue: UseFormSetValue<RegisterValues>;
 };
 
-const TYPE_OPTIONS = BUSINESS_TYPES.map((type) => ({ value: type, label: BUSINESS_TYPE_LABELS[type] }));
+const TYPE_OPTIONS = BUSINESS_TYPES.map((type) => ({
+  value: type,
+  label: BUSINESS_TYPE_LABELS[type],
+}));
 
 /** Step 1: the business, with GSTIN filling in PAN (and showing the state). */
 export function BusinessStep({ control, setValue }: StepProps) {
@@ -57,7 +60,8 @@ export function BusinessStep({ control, setValue }: StepProps) {
             onChangeText={(text) => {
               const value = text.toUpperCase().replace(/\s/g, "");
               field.onChange(value);
-              if (isValidGstin(value)) setValue("pan", getPanFromGstin(value), { shouldValidate: true });
+              if (isValidGstin(value))
+                setValue("pan", getPanFromGstin(value), { shouldValidate: true });
             }}
             onBlur={field.onBlur}
             error={fieldState.error?.message}

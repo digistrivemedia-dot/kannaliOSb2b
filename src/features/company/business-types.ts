@@ -11,4 +11,7 @@ export const BUSINESS_TYPE_LABELS: Record<BusinessType, string> = {
   corporate: "Corporate",
 };
 
-export const BUSINESS_TYPES = Object.keys(BUSINESS_TYPE_LABELS) as [BusinessType, ...BusinessType[]];
+export const BUSINESS_TYPES = Object.keys(BUSINESS_TYPE_LABELS) as [
+  BusinessType,
+  ...BusinessType[],
+];

@@ -20,9 +20,18 @@ import { toRegisterValues } from "@/features/auth/utils";
 
 /** What happens after an application is sent (website `NextSteps`). */
 const NEXT_STEPS = [
-  { title: "We verify your business", detail: "We check your details and shop photos, usually within 1 working day." },
-  { title: "We set up your account", detail: "Our sales team calls to agree your business discount and, if you need it, credit." },
-  { title: "You start working", detail: "Your login arrives by email; set your password from the link and sign in." },
+  {
+    title: "We verify your business",
+    detail: "We check your details and shop photos, usually within 1 working day.",
+  },
+  {
+    title: "We set up your account",
+    detail: "Our sales team calls to agree your business discount and, if you need it, credit.",
+  },
+  {
+    title: "You start working",
+    detail: "Your login arrives by email; set your password from the link and sign in.",
+  },
 ];
 
 /**
@@ -68,7 +77,11 @@ export function ApplicationStatusScreen() {
           <Skeleton shape="card" className="h-44 w-full" />
         </View>
       ) : query.isError ? (
-        <ErrorState error={query.error} onRetry={() => void query.refetch()} what="your application" />
+        <ErrorState
+          error={query.error}
+          onRetry={() => void query.refetch()}
+          what="your application"
+        />
       ) : !application || isLookingUp ? (
         <ApplicationLookup onFound={() => setIsLookingUp(false)} />
       ) : (
@@ -119,7 +132,11 @@ export function ApplicationStatusScreen() {
               Your login details are in your email. Set your password from the link, then sign in.
             </Text>
           )}
-          <Button variant="ghost" label="Check a different application" onPress={() => setIsLookingUp(true)} />
+          <Button
+            variant="ghost"
+            label="Check a different application"
+            onPress={() => setIsLookingUp(true)}
+          />
         </>
       )}
     </Screen>

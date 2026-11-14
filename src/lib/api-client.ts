@@ -94,7 +94,11 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     if (isErrorBody(data)) {
       throw new ApiError(response.status, data.code, data.message, data.fieldErrors);
     }
-    throw new ApiError(response.status, "unknown", "Something went wrong on our side. Please try again.");
+    throw new ApiError(
+      response.status,
+      "unknown",
+      "Something went wrong on our side. Please try again.",
+    );
   }
   return data as T;
 }

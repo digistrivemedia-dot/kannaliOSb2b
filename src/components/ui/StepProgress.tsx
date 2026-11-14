@@ -13,7 +13,11 @@ type StepProgressProps = {
 /** "Step 2 of 4" with the step's title and a bar of segments. */
 export function StepProgress({ step, total, title }: StepProgressProps) {
   return (
-    <View accessible accessibilityLabel={`Step ${step + 1} of ${total}: ${title}`} className="gap-2">
+    <View
+      accessible
+      accessibilityLabel={`Step ${step + 1} of ${total}: ${title}`}
+      className="gap-2"
+    >
       <Text variant="label" tone="muted" sectionLabel>
         Step {step + 1} of {total}
       </Text>

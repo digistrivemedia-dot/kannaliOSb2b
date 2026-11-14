@@ -51,7 +51,11 @@ const STEPS: Record<JobStep, StepRule> = {
     permission: "jobs:inspect",
     waiting: "Waiting for inspection",
   },
-  estimate: { label: "Send estimate", permission: "jobs:manage", waiting: "Waiting for the estimate" },
+  estimate: {
+    label: "Send estimate",
+    permission: "jobs:manage",
+    waiting: "Waiting for the estimate",
+  },
   record_answer: {
     label: "Record customer's answer",
     permission: "jobs:manage",
@@ -74,7 +78,11 @@ const STEPS: Record<JobStep, StepRule> = {
     permission: "jobs:deliver",
     waiting: "Waiting for a delivery driver",
   },
-  record_delivery: { label: "Record delivery", permission: "jobs:deliver", waiting: "Being delivered" },
+  record_delivery: {
+    label: "Record delivery",
+    permission: "jobs:deliver",
+    waiting: "Being delivered",
+  },
   handover: { label: "Hand over", permission: "jobs:deliver", waiting: "Waiting for handover" },
 };
 
@@ -134,7 +142,9 @@ export function closedText(job: Partial<Pick<JobCard, "timeline">>): string {
 export function nextAction(job: JobForAction, roles: readonly Role[]): NextAction {
   const step = currentStep(job);
   if (typeof step !== "string") {
-    return "done" in step ? { kind: "done", text: step.done } : { kind: "waiting", text: step.waiting };
+    return "done" in step
+      ? { kind: "done", text: step.done }
+      : { kind: "waiting", text: step.waiting };
   }
   const rule = STEPS[step];
   if (can(roles, rule.permission)) return { kind: "do", step, label: rule.label };

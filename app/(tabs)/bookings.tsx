@@ -1,5 +1,3 @@
-import { PlannedTab } from "@/components/layout/PlannedTab";
+import { BookingsScreen } from "@/features/bookings/screens/BookingsScreen";
 
-export default function BookingsTab() {
-  return <PlannedTab title="Bookings" screen="G22" />;
-}
+export default BookingsScreen;

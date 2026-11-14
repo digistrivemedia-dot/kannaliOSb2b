@@ -17,7 +17,13 @@ let nextId = 1;
 let hideTimer: ReturnType<typeof setTimeout> | undefined;
 
 /** A short message after an action, with a light haptic: "Technician assigned". */
-export function showToast({ message, tone = "success" }: { message: string; tone?: Toast["tone"] }) {
+export function showToast({
+  message,
+  tone = "success",
+}: {
+  message: string;
+  tone?: Toast["tone"];
+}) {
   if (tone === "success") haptic.confirm();
   const toast = { id: nextId++, message, tone };
   useToast.setState({ toast });

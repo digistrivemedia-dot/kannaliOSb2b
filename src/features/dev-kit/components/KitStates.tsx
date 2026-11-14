@@ -12,8 +12,16 @@ import { ApiError } from "@/lib/api-client";
 
 const noop = () => {};
 
-const SERVER_ERROR = new ApiError(500, "internal", "Something went wrong on our side. Please try again.");
-const OFFLINE_ERROR = new ApiError(0, "network", "Couldn't reach Kannali Garage. Check your internet and try again.");
+const SERVER_ERROR = new ApiError(
+  500,
+  "internal",
+  "Something went wrong on our side. Please try again.",
+);
+const OFFLINE_ERROR = new ApiError(
+  0,
+  "network",
+  "Couldn't reach Kannali Garage. Check your internet and try again.",
+);
 
 export function KitStates() {
   const [photos, setPhotos] = useState<string[]>([]);
@@ -21,7 +29,12 @@ export function KitStates() {
     <>
       <Section title="Photos">
         <Card className="gap-4">
-          <PhotoCapture label="Vehicle photos" photos={photos} onChange={setPhotos} hint="At least one, from the front." />
+          <PhotoCapture
+            label="Vehicle photos"
+            photos={photos}
+            onChange={setPhotos}
+            hint="At least one, from the front."
+          />
           <PhotoGallery photos={photos} label="Vehicle photo" />
         </Card>
       </Section>

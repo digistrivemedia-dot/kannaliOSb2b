@@ -19,7 +19,13 @@ export function Section({ title, children, action, isDone }: SectionProps) {
   return (
     <View className="gap-3">
       <View className="min-h-6 flex-row items-center gap-2">
-        <Text variant="label" tone="muted" sectionLabel accessibilityRole="header" className="flex-1">
+        <Text
+          variant="label"
+          tone="muted"
+          sectionLabel
+          accessibilityRole="header"
+          className="flex-1"
+        >
           {title}
         </Text>
         {isDone ? (

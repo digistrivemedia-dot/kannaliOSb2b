@@ -29,7 +29,9 @@ export function ReviewStep({ control, values, onEdit }: ReviewStepProps) {
           <DetailRow label="Type">{BUSINESS_TYPE_LABELS[values.businessType]}</DetailRow>
           {values.gstin ? <DetailRow label="GSTIN">{values.gstin}</DetailRow> : null}
           {values.pan ? <DetailRow label="PAN">{values.pan}</DetailRow> : null}
-          {values.licenceNumber ? <DetailRow label="Licence">{values.licenceNumber}</DetailRow> : null}
+          {values.licenceNumber ? (
+            <DetailRow label="Licence">{values.licenceNumber}</DetailRow>
+          ) : null}
           {values.otherRegistration ? (
             <DetailRow label="Other registration">{values.otherRegistration}</DetailRow>
           ) : null}
@@ -40,24 +42,40 @@ export function ReviewStep({ control, values, onEdit }: ReviewStepProps) {
       </Section>
       <Section title="Contact and location" action={{ label: "Edit", onPress: () => onEdit(1) }}>
         <Card className="gap-3">
-          {values.contactName ? <DetailRow label="Contact person">{values.contactName}</DetailRow> : null}
+          {values.contactName ? (
+            <DetailRow label="Contact person">{values.contactName}</DetailRow>
+          ) : null}
           <DetailRow label="Email">{values.email}</DetailRow>
           <DetailRow label="Mobile">{formatPhone(values.mobile)}</DetailRow>
           <DetailRow label="Address">
-            {[values.addressLine1, values.addressLine2, `${values.city} ${values.pin}`, values.state]
+            {[
+              values.addressLine1,
+              values.addressLine2,
+              `${values.city} ${values.pin}`,
+              values.state,
+            ]
               .filter(Boolean)
               .join("\n")}
           </DetailRow>
         </Card>
       </Section>
       <Section title="Shop photos" action={{ label: "Edit", onPress: () => onEdit(2) }}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerClassName="gap-2"
+        >
           {values.photos.map((uri, index) => (
             <Image
               key={`${index}-${uri}`}
               source={{ uri }}
               accessibilityLabel={`Shop photo ${index + 1}`}
-              style={{ width: 88, height: 88, borderRadius: radius.input, backgroundColor: colors.gray[100] }}
+              style={{
+                width: 88,
+                height: 88,
+                borderRadius: radius.input,
+                backgroundColor: colors.gray[100],
+              }}
             />
           ))}
         </ScrollView>

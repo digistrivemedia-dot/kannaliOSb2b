@@ -31,13 +31,28 @@ export function KitChoices() {
       </View>
       <Card className="gap-1">
         <Checkbox label="Road test done" checked={checked} onChange={setChecked} />
-        <Checkbox label="Old parts kept for the customer" description="Hand them over at delivery" checked={false} onChange={() => {}} />
+        <Checkbox
+          label="Old parts kept for the customer"
+          description="Hand them over at delivery"
+          checked={false}
+          onChange={() => {}}
+        />
         <Checkbox label="Disabled" checked onChange={() => {}} disabled />
         <View accessibilityRole="radiogroup">
           <Radio label="Cash" selected={method === "cash"} onSelect={() => setMethod("cash")} />
-          <Radio label="Garage's UPI" description="Customer pays to your UPI ID" selected={method === "upi"} onSelect={() => setMethod("upi")} />
+          <Radio
+            label="Garage's UPI"
+            description="Customer pays to your UPI ID"
+            selected={method === "upi"}
+            onSelect={() => setMethod("upi")}
+          />
         </View>
-        <Switch label="Taking bookings" description="Customers can book this branch" value={isOn} onChange={setIsOn} />
+        <Switch
+          label="Taking bookings"
+          description="Customers can book this branch"
+          value={isOn}
+          onChange={setIsOn}
+        />
         <QuantityStepper value={quantity} onChange={setQuantity} />
       </Card>
     </Section>

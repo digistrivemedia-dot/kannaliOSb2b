@@ -31,7 +31,11 @@ export function NextStepBar({ step }: { step: NextStepView }) {
           ) : (
             <Clock size={22} color={colors.gray[700]} />
           )}
-          <Text weight="semibold" tone={step.kind === "done" ? "success" : "default"} className="flex-1">
+          <Text
+            weight="semibold"
+            tone={step.kind === "done" ? "success" : "default"}
+            className="flex-1"
+          >
             {step.text}
           </Text>
         </View>

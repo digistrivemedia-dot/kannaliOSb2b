@@ -170,7 +170,13 @@ export type JobEvent = {
 
 export type JobSource = "booking" | "walk_in";
 
-export type JobVehicle = { id: string; plate: string; type: VehicleType; make: string; model: string };
+export type JobVehicle = {
+  id: string;
+  plate: string;
+  type: VehicleType;
+  make: string;
+  model: string;
+};
 
 export type JobCard = {
   id: string;

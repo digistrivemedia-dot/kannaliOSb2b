@@ -7,7 +7,13 @@ import { CountTile } from "@/components/ui/CountTile";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { JOB_COUNT_GROUPS, type JobCountGroup } from "@/features/jobs/utils";
 
-type Tile = { key: string; label: string; count: number | undefined; urgent?: boolean; onPress: () => void };
+type Tile = {
+  key: string;
+  label: string;
+  count: number | undefined;
+  urgent?: boolean;
+  onPress: () => void;
+};
 
 type TodayCountsProps = {
   /** Left out for people who don't answer bookings. */

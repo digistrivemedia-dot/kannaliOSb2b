@@ -94,11 +94,19 @@ export function RegisterScreen() {
         <BottomBar>
           <Button
             size="main"
-            label={isLast ? (draft.mode === "resubmit" ? "Send corrections" : "Send application") : "Next"}
+            label={
+              isLast
+                ? draft.mode === "resubmit"
+                  ? "Send corrections"
+                  : "Send application"
+                : "Next"
+            }
             onPress={isLast ? submit : () => void next()}
             loading={formState.isSubmitting}
           />
-          {step > 0 && <Button variant="ghost" label="Back" onPress={() => goTo(step - 1)} fullWidth />}
+          {step > 0 && (
+            <Button variant="ghost" label="Back" onPress={() => goTo(step - 1)} fullWidth />
+          )}
         </BottomBar>
       }
     >

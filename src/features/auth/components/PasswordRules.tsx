@@ -19,8 +19,16 @@ export function PasswordRules({ password }: { password: string }) {
             accessibilityLabel={`${rule.label}, ${isMet ? "done" : "not yet"}`}
             className="flex-row items-center gap-2"
           >
-            <Icon size={18} strokeWidth={isMet ? 3 : 2} color={isMet ? colors.success[700] : colors.gray[500]} />
-            <Text variant="small" tone={isMet ? "success" : "muted"} weight={isMet ? "medium" : "regular"}>
+            <Icon
+              size={18}
+              strokeWidth={isMet ? 3 : 2}
+              color={isMet ? colors.success[700] : colors.gray[500]}
+            />
+            <Text
+              variant="small"
+              tone={isMet ? "success" : "muted"}
+              weight={isMet ? "medium" : "regular"}
+            >
               {rule.label}
             </Text>
           </View>

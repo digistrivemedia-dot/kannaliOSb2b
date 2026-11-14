@@ -23,10 +23,17 @@ export function UnreachableScreen() {
   };
   return (
     <View className="flex-1 bg-gray-50">
-      <AuthHeader title="Can't reach Kannali" subtitle="Your jobs will show as soon as you're back online." />
+      <AuthHeader
+        title="Can't reach Kannali"
+        subtitle="Your jobs will show as soon as you're back online."
+      />
       <ErrorState error={NOT_REACHED} onRetry={() => void retry()} retrying={isRetrying} />
       <View className="items-center">
-        <Button variant="ghost" label="Sign out" onPress={() => void useAuth.getState().signOut()} />
+        <Button
+          variant="ghost"
+          label="Sign out"
+          onPress={() => void useAuth.getState().signOut()}
+        />
       </View>
     </View>
   );

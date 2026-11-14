@@ -42,7 +42,13 @@ export function TodayScreen() {
     { enabled: canBook },
   );
   const waiting = useJobCards(
-    { statuses: NEEDS_YOU_STATUSES, branchId: branch.id, sort: "createdAt", order: "asc", pageSize: 50 },
+    {
+      statuses: NEEDS_YOU_STATUSES,
+      branchId: branch.id,
+      sort: "createdAt",
+      order: "asc",
+      pageSize: 50,
+    },
     { live: true },
   );
   const counts = useJobCounts(branch.id);
@@ -63,7 +69,9 @@ export function TodayScreen() {
   return (
     <Screen
       inTabs
-      header={<TopBar title={greeting(user.name, now)} subtitle={formatWeekday(now.toISOString())} />}
+      header={
+        <TopBar title={greeting(user.name, now)} subtitle={formatWeekday(now.toISOString())} />
+      }
       onRefresh={refresh}
       bottomBar={
         canWalkIn ? (

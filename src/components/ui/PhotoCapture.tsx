@@ -44,7 +44,10 @@ export function PhotoCapture({ label, photos, onChange, max = 6, hint, error }: 
   const takePhoto = async () => {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
     if (!permission.granted) {
-      showToast({ message: "Allow camera access in your phone's settings to take photos.", tone: "danger" });
+      showToast({
+        message: "Allow camera access in your phone's settings to take photos.",
+        tone: "danger",
+      });
       return;
     }
     await add(() => ImagePicker.launchCameraAsync({ mediaTypes: ["images"], quality: 1 }));
@@ -124,7 +127,12 @@ export function PhotoCapture({ label, photos, onChange, max = 6, hint, error }: 
           {formatCount(max, "photo")} is the most you can add.
         </Text>
       ) : null}
-      <PhotoViewer photos={photos} startIndex={openAt} onClose={() => setOpenAt(null)} label={label} />
+      <PhotoViewer
+        photos={photos}
+        startIndex={openAt}
+        onClose={() => setOpenAt(null)}
+        label={label}
+      />
     </View>
   );
 }

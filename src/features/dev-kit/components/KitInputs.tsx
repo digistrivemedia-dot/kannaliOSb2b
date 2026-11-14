@@ -29,14 +29,31 @@ export function KitInputs() {
       <Card className="gap-4">
         <FormAlert message="That email and password don't match. Try again." />
         <Input label="Customer name" value={name} onChangeText={setName} hint="As on their ID" />
-        <Input label="With an error" value="98450" onChangeText={() => {}} error="Enter a 10-digit mobile number." />
+        <Input
+          label="With an error"
+          value="98450"
+          onChangeText={() => {}}
+          error="Enter a 10-digit mobile number."
+        />
         <Input label="Not editable" value="29AAKFS4821M1Z3" editable={false} />
         <PlateInput label="Number plate" value={plate} onChangeText={setPlate} />
         <NumberInput label="Odometer" value={odometer} onChangeText={setOdometer} suffix="km" />
-        <NumberInput label="Amount received" value={amount} onChangeText={setAmount} prefix="₹" decimals />
+        <NumberInput
+          label="Amount received"
+          value={amount}
+          onChangeText={setAmount}
+          prefix="₹"
+          decimals
+        />
         <PasswordInput label="Password" value={password} onChangeText={setPassword} />
         <SelectField label="Fuel level" options={FUEL_OPTIONS} value={fuel} onChange={setFuel} />
-        <SelectField label="With an error" options={FUEL_OPTIONS} value={null} onChange={setFuel} error="Choose the fuel level." />
+        <SelectField
+          label="With an error"
+          options={FUEL_OPTIONS}
+          value={null}
+          onChange={setFuel}
+          error="Choose the fuel level."
+        />
       </Card>
     </Section>
   );

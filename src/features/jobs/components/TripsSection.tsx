@@ -43,16 +43,35 @@ export function TripsSection({ pickupDrop }: { pickupDrop: PickupDrop }) {
   );
 }
 
-function AddressRow({ label, address, divided }: { label: string; address: string; divided?: boolean }) {
+function AddressRow({
+  label,
+  address,
+  divided,
+}: {
+  label: string;
+  address: string;
+  divided?: boolean;
+}) {
   return (
-    <View className={divided ? "flex-row items-center gap-2 border-t border-gray-200 py-2 pl-4 pr-2" : "flex-row items-center gap-2 py-2 pl-4 pr-2"}>
+    <View
+      className={
+        divided
+          ? "flex-row items-center gap-2 border-t border-gray-200 py-2 pl-4 pr-2"
+          : "flex-row items-center gap-2 py-2 pl-4 pr-2"
+      }
+    >
       <View className="flex-1 py-1">
         <Text variant="small" tone="muted">
           {label}
         </Text>
         <Text>{address}</Text>
       </View>
-      <IconButton icon={MapPinned} label={`Open ${label.toLowerCase()} in maps`} tone="navy" onPress={() => openInMaps(address)} />
+      <IconButton
+        icon={MapPinned}
+        label={`Open ${label.toLowerCase()} in maps`}
+        tone="navy"
+        onPress={() => openInMaps(address)}
+      />
     </View>
   );
 }

@@ -51,6 +51,10 @@ const STATUSES = {
   requested: { tone: "info", word: "Requested" },
   quoted: { tone: "warning", word: "Waiting for you" },
   expired: { tone: "neutral", word: "Expired" },
+  // Team members
+  invited: { tone: "info", word: "Invited" },
+  active: { tone: "success", word: "Active" },
+  disabled: { tone: "neutral", word: "Disabled" },
 } satisfies Record<string, { tone: Tone; word: string }>;
 
 export type Status = keyof typeof STATUSES;

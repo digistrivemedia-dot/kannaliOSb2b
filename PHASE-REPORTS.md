@@ -237,3 +237,49 @@ booking to HSR Layout for the new-booking alert.
    - As `venkatesh@`: Order by part number → paste "AMA93795 2" lines → cart → checkout online → Pay (demo).
    - As `ganesh@` (non-garage): the Home tab, then checkout on credit.
    - A quotation "Waiting for you" → Accept and order: checkout shows the quoted prices.
+
+## Phase 8: Money, company and garage setup
+
+1. **Built**
+   - G70 Credit, `/credit` (only when credit is on; More hides it otherwise): limit, used and available on a bar,
+     overdue first, dues with Pay, statement for 30 / 90 / 365 days with Share PDF; invoice PDFs shared from their link.
+   - G71 Pay dues (sheet), `/pay-dues`: pick invoices or "oldest first", total, bank transfer with a reference.
+     Online is shown but off until Razorpay (BN-12).
+   - G72 Payments, `/payments`: status chips, cards with date, method, reference, amount, what it paid.
+     Receipt `/payment/[id]` with Share PDF.
+   - G73 Documents, `/documents`: GST invoices and credit notes, type chips, date range, search by number, Share PDF.
+   - G75 More, `/more` (and the non-garage Account tab): grouped Garage, Buying, Money, Company from `can()`, minus
+     the user's tabs; My account and Sign out at the bottom.
+   - G76 Business profile, `/business-profile`: name, type, GSTIN, PAN, registered address (read-only); email and
+     phone (editable, field errors from the API); discount % and credit (read-only); photos and documents.
+   - G77 Addresses, `/addresses`, `/address/new`, `/address/[id]`: list with Default, add / edit (PIN fills city and
+     state), Make default, Remove (confirm; hidden on the default).
+   - G78 Team, `/team`: people with role badges, branch and status (Invited, Active, Disabled); Add person.
+   - G79 Add / edit person, `/person/new`, `/person/[id]`: name, email, phone, roles with what each does, one branch;
+     Disable (confirm) / Enable; Resend invite while invited. The owner can't drop their own owner role.
+   - G80 Branches, `/branches`: staff count, Taking bookings switch, add / edit address and contact.
+   - G81 Garage profile, `/garage-profile`: photos (camera first, max 6), about, services with own prices excl. GST
+     and minutes, vehicle types, opening hours per day (number keypad, "09:30"), daily booking limit, holidays
+     (DD/MM/YYYY), pick-up and drop (on/off, fee excl. GST, radius). The draft is kept until saved.
+   - `scripts/dev-data.ts`: a dealer order on credit, shipped, so Credit has a due after every start; a booking for a
+     full or closed day moves to the next open day; the "Wait N seconds" retry regex fixed (`\d+`).
+2. **Differs from the plan**
+   - G80 "hours": opening hours belong to the whole garage in the backend, so they're set in G81; Branches says so.
+   - Garage photos: the backend keeps 6 (the website said 8) and each is shrunk to 200 KB so the profile fits the
+     2 MB request limit.
+   - Credit payments waiting for Kannali don't list their invoices yet (BN-13): the payment says it is applied once
+     confirmed.
+3. **API gaps:** BN-12 (demo online payment for dues), BN-13 (pending payment shown on invoices and payments).
+4. **New libraries:** none.
+5. **Check:** `tsc` clean (app and scripts); fresh Android and iOS bundles. 41 flow checks passed as `ganesh@`
+   (dealer, credit on), `lakshmi@` (retailer, no credit: hidden), `ravi@` (manager: no credit, team or profile),
+   `mahesh@` (owner): credit summary, dues, statement, bank transfer with reference, payments and receipt, document
+   filters and search, contact edit with a field error, address add / edit / default / remove rules, team add,
+   duplicate email, no roles, edit, resend invite, disable / enable, branches pause / resume bookings, garage profile
+   save with a new photo, service, holiday and pick-up fee, and a field error. No phones.
+6. **Commit:** `feat(company): credit, payments, documents, more, team, branches and garage profile` (the commit
+   with this report).
+7. **Lead to look at**
+   - As `ganesh@`: Account → Credit → Pay dues → bank transfer reference → Payments shows it waiting.
+   - As `mahesh@`: More → Team → Add person → the invite link prints in the backend's terminal.
+   - As `mahesh@`: More → Garage profile → take a photo, add a service and a holiday → Save.

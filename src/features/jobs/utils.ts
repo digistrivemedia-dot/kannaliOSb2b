@@ -6,6 +6,7 @@ import type {
   JobCard,
   JobStatus,
   JobVehicle,
+  VehicleType,
 } from "@/features/jobs/types";
 import { formatDateTime } from "@/lib/format";
 import { calculateGst } from "@/lib/gst";
@@ -271,3 +272,10 @@ export function isFixedLine(jobId: string, lineId: string): boolean {
 
 /** GST on garage services is 18% (backend B-44). */
 export const SERVICE_GST_PERCENT = 18;
+
+export const VEHICLE_TYPE_LABELS: Record<VehicleType, string> = {
+  bike: "Bike",
+  scooter: "Scooter",
+  car: "Car",
+  commercial: "Commercial",
+};

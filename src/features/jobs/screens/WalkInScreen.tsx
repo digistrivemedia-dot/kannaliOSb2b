@@ -23,19 +23,11 @@ import { useActiveBranch } from "@/features/company/use-active-branch";
 import { ComplaintsField } from "@/features/jobs/components/ComplaintsField";
 import { useCreateWalkIn, useVehicleLookup } from "@/features/jobs/queries";
 import { VEHICLE_TYPES, walkInSchema, type WalkInValues } from "@/features/jobs/schemas";
-import type { VehicleType } from "@/features/jobs/types";
-import { vehicleName } from "@/features/jobs/utils";
+import { VEHICLE_TYPE_LABELS, vehicleName } from "@/features/jobs/utils";
 import { errorMessage } from "@/lib/api-client";
 import { clearDraft, savedDraft, useFormDraft } from "@/lib/drafts";
 import { applyApiErrors } from "@/lib/form-errors";
 import { formatPhone, isValidPlate } from "@/lib/format";
-
-const TYPE_LABELS: Record<VehicleType, string> = {
-  bike: "Bike",
-  scooter: "Scooter",
-  car: "Car",
-  commercial: "Commercial",
-};
 
 const EMPTY: WalkInValues = {
   plate: "",
@@ -232,7 +224,10 @@ function NewVehicleFields({
             <View className="-mx-4">
               <FilterChips
                 label="Vehicle type"
-                options={VEHICLE_TYPES.map((type) => ({ value: type, label: TYPE_LABELS[type] }))}
+                options={VEHICLE_TYPES.map((type) => ({
+                  value: type,
+                  label: VEHICLE_TYPE_LABELS[type],
+                }))}
                 value={field.value}
                 onChange={field.onChange}
               />

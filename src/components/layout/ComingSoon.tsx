@@ -7,10 +7,12 @@ import { EmptyState } from "@/components/ui/EmptyState";
  * each phase removes its screens from here, and Phase 9 deletes the file.
  */
 export const PLANNED_SCREENS = {
-  G70: { name: "Credit", phase: 8 },
-  G75: { name: "More", phase: 8 },
+  G82: { name: "Customers", phase: 9 },
   G83: { name: "Customer and vehicle history", phase: 9 },
+  G84: { name: "Reviews", phase: 9 },
+  G85: { name: "Reports", phase: 9 },
   G86: { name: "Notifications", phase: 9 },
+  G87: { name: "My account", phase: 9 },
 } as const;
 
 export type PlannedScreen = keyof typeof PLANNED_SCREENS;

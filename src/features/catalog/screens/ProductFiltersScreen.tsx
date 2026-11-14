@@ -10,13 +10,8 @@ import { Text } from "@/components/ui/Text";
 import { useProductFilters, type ProductFilters } from "@/features/catalog/filter-store";
 import { useCatalogFilters } from "@/features/catalog/queries";
 import type { VehicleType } from "@/features/jobs/types";
+import { VEHICLE_TYPE_LABELS } from "@/features/jobs/utils";
 
-const TYPE_LABELS: Record<VehicleType, string> = {
-  bike: "Bike",
-  scooter: "Scooter",
-  car: "Car",
-  commercial: "Commercial",
-};
 const ANY = "any";
 
 /** The product list's Filters sheet: category, brand, vehicle fit (type → make → model), in stock. */
@@ -71,7 +66,7 @@ export function ProductFiltersScreen() {
           label="Vehicle type"
           options={[
             { value: ANY, label: "Any vehicle" },
-            ...types.map((type) => ({ value: type, label: TYPE_LABELS[type] })),
+            ...types.map((type) => ({ value: type, label: VEHICLE_TYPE_LABELS[type] })),
           ]}
           value={draft.vehicleType ?? ANY}
           onChange={(value) =>

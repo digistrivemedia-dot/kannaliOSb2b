@@ -1,3 +1,5 @@
+import type { Role } from "@/features/auth/types";
+
 // Copied from spareXB2B/src/features/company/types.ts; the API returns exactly these shapes.
 
 export type BusinessType = "garage" | "fleet" | "dealer" | "retailer" | "reseller" | "corporate";
@@ -51,3 +53,26 @@ export type PincodeDetails = {
   district?: string;
   state: string;
 };
+
+export type CompanyUserStatus = "active" | "invited" | "disabled";
+
+export type CompanyUser = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  /** One person can hold several roles. */
+  roles: Role[];
+  /** Staff work at one branch and see only its jobs. */
+  branchId: string;
+  status: CompanyUserStatus;
+  lastActiveAt?: string;
+};
+
+export type CompanyUserInput = Pick<CompanyUser, "name" | "email" | "phone" | "roles" | "branchId">;
+
+/** What is sent to add or change a branch (a delivery address, and for a garage a workshop). */
+export type BranchInput = Pick<Branch, "name" | "address" | "contactName" | "contactPhone">;
+
+/** A branch as the garage sees it, with how many staff work there. */
+export type GarageBranch = Branch & { staffCount: number };

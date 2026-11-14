@@ -155,6 +155,20 @@ export default function RootLayout() {
                   animation: "fade",
                 }}
               />
+              <Stack.Screen name="credit" />
+              <Stack.Screen name="pay-dues" options={{ ...sheet, sheetAllowedDetents: [0.8, 1] }} />
+              <Stack.Screen name="payments" />
+              <Stack.Screen name="payment/[id]" />
+              <Stack.Screen name="documents" />
+              <Stack.Screen name="business-profile" />
+              <Stack.Screen name="addresses" />
+              <Stack.Screen name="address/new" />
+              <Stack.Screen name="address/[id]" />
+              <Stack.Screen name="team" />
+              <Stack.Screen name="person/new" />
+              <Stack.Screen name="person/[id]" />
+              <Stack.Screen name="branches" />
+              <Stack.Screen name="garage-profile" />
               <Stack.Screen name="coming-soon" />
               <Stack.Screen name="sheets/select" options={sheet} />
               <Stack.Screen name="branch-switcher" options={sheet} />

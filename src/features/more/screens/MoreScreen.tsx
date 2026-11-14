@@ -1,9 +1,9 @@
 import { router } from "expo-router";
-import { LogOut, Palette } from "lucide-react-native";
+import { Bell, LogOut, Palette, UserRound } from "lucide-react-native";
 import { useState } from "react";
 import { View } from "react-native";
 
-import { ComingSoon } from "@/components/layout/ComingSoon";
+import { plannedHref } from "@/components/layout/ComingSoon";
 import { Screen } from "@/components/layout/Screen";
 import { Section } from "@/components/layout/Section";
 import { TopBar } from "@/components/layout/TopBar";
@@ -13,18 +13,18 @@ import { ListRow } from "@/components/ui/ListRow";
 import { Text } from "@/components/ui/Text";
 import { describeRoles } from "@/features/auth/roles";
 import { useAuth, useSession } from "@/features/auth/store";
-import { tabLabel } from "@/features/auth/tabs";
+import { tabLabel, tabsFor } from "@/features/auth/tabs";
 import { useActiveBranch } from "@/features/company/use-active-branch";
+import { moreMenu } from "@/features/more/menu";
 
-/**
- * G75, for Phase 1: who is signed in, and Sign out. The grouped menu of everything else this user
- * may open is built in Phase 8.
- */
+/** G75: everything else this user may open, grouped (Garage, Buying, Money, Company), then their account. */
 export function MoreScreen() {
-  const { user, roles, business } = useSession();
+  const session = useSession();
+  const { user, roles, business } = session;
   const branch = useActiveBranch();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const isGarage = business.type === "garage";
+  const groups = moreMenu(session, tabsFor(roles, business.type).tabs);
 
   const signOut = async () => {
     setIsSigningOut(true);
@@ -33,34 +33,62 @@ export function MoreScreen() {
 
   return (
     <Screen inTabs header={<TopBar title={tabLabel("more", business.type)} />}>
-      <Card className="flex-row items-center gap-3">
+      <Card
+        onPress={() => router.push(plannedHref("G87"))}
+        accessibilityLabel="My account"
+        className="flex-row items-center gap-3"
+      >
         <Avatar name={user.name} />
         <View className="flex-1">
           <Text weight="semibold">{user.name}</Text>
-          <Text variant="small" tone="muted">
-            {user.email}
-          </Text>
           <Text variant="small" tone="muted">
             {isGarage ? `${describeRoles(roles)} · ${branch.name}` : business.name}
           </Text>
         </View>
       </Card>
-      <ComingSoon screen="G75" />
+      {groups.map((group) => (
+        <Section key={group.title} title={group.title}>
+          <Card flush>
+            {group.items.map((item, index) => (
+              <ListRow
+                key={item.label}
+                icon={item.icon}
+                title={item.label}
+                onPress={() => router.push(item.href)}
+                divided={index > 0}
+              />
+            ))}
+          </Card>
+        </Section>
+      ))}
       <Section title="Account">
         <Card flush>
+          <ListRow
+            icon={UserRound}
+            title="My account"
+            subtitle="Your details and password"
+            onPress={() => router.push(plannedHref("G87"))}
+          />
+          <ListRow
+            icon={Bell}
+            title="Notifications"
+            onPress={() => router.push(plannedHref("G86"))}
+            divided
+          />
           {__DEV__ && (
             <ListRow
+              icon={Palette}
               title="Design kit"
               subtitle="Every component, for developers"
-              icon={Palette}
               onPress={() => router.push("/dev/kit")}
+              divided
             />
           )}
           <ListRow
             title={isSigningOut ? "Signing out…" : "Sign out"}
             icon={LogOut}
             destructive
-            divided={__DEV__}
+            divided
             onPress={isSigningOut ? undefined : () => void signOut()}
           />
         </Card>

@@ -2,7 +2,6 @@ import { router } from "expo-router";
 import { CircleAlert, FilePlus2, FileText, ListOrdered, ShoppingBag } from "lucide-react-native";
 import { View } from "react-native";
 
-import { plannedHref } from "@/components/layout/ComingSoon";
 import { Screen } from "@/components/layout/Screen";
 import { Section } from "@/components/layout/Section";
 import { TopBar } from "@/components/layout/TopBar";
@@ -48,7 +47,7 @@ export function HomeScreen() {
                 destructive
                 title={`${formatCount(overdue.overdueInvoiceCount, "invoice")} overdue`}
                 subtitle={`${formatPrice(overdue.overdueInPaise)} to pay`}
-                onPress={() => router.push(plannedHref("G70"))}
+                onPress={() => router.push("/credit")}
               />
             ) : null}
             {toAnswer ? (

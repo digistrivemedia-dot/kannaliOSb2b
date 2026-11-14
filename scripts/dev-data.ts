@@ -23,6 +23,8 @@ const STAFF = {
   technician: "imran@srisaiworks.example.com",
   hsrTechnician: "venkatesh@srisaiworks.example.com",
   admin: "kiran@kannaligarage.in",
+  /** A dealer with credit on, for the money screens. */
+  dealer: "ganesh@vinayakamotors.in",
 };
 const HSR = "br-hsr";
 const WHITEFIELD = "br-whitefield";
@@ -68,7 +70,7 @@ async function signIn(email: string): Promise<string> {
     body: { email, password: PASSWORD },
   }).catch(async (error: unknown) => {
     // A 2-step code was sent moments ago (an earlier run): wait as long as the backend asks, once.
-    const wait = error instanceof Error ? /Wait (d+) seconds/.exec(error.message)?.[1] : undefined;
+    const wait = error instanceof Error ? /Wait (\d+) seconds/.exec(error.message)?.[1] : undefined;
     if (!wait) throw error;
     say(`Waiting ${wait} s for the next 2-step code…`);
     await new Promise((resolve) => setTimeout(resolve, (Number(wait) + 1) * 1000));
@@ -465,21 +467,30 @@ async function book(options: { days: number; slot: string; pickup: boolean; bran
     "b2c",
     `/service-packages?modelId=${encodeURIComponent("vm_honda-activa-6g")}`,
   );
-  const request = await api<Json>("b2c", "/me/service-requests", {
-    token: person.token,
-    body: {
-      vehicleId: person.vehicleId,
-      packageId: packages[0]?.id ?? null,
-      garage: { mode: "chosen", garageId: options.branchId ?? HSR },
-      date: todayInIndia(options.days),
-      slotId: options.slot,
-      notes: "Please check the brakes too",
-      pickupDrop: options.pickup
-        ? { pickupAddressId: person.addressId, dropAddressId: person.addressId }
-        : null,
-    },
-  });
-  return { request, customer: person.name };
+  // A day that is full, closed or a holiday is refused: the booking moves to the next day.
+  for (let days = options.days; days < options.days + 7; days++) {
+    try {
+      const request = await api<Json>("b2c", "/me/service-requests", {
+        token: person.token,
+        body: {
+          vehicleId: person.vehicleId,
+          packageId: packages[0]?.id ?? null,
+          garage: { mode: "chosen", garageId: options.branchId ?? HSR },
+          date: todayInIndia(days),
+          slotId: options.slot,
+          notes: "Please check the brakes too",
+          pickupDrop: options.pickup
+            ? { pickupAddressId: person.addressId, dropAddressId: person.addressId }
+            : null,
+        },
+      });
+      return { request, customer: person.name, date: todayInIndia(days) };
+    } catch (error) {
+      if (!(error instanceof ApiFailure && error.message.includes("NO_GARAGE_AVAILABLE")))
+        throw error;
+    }
+  }
+  throw new ApiFailure("HSR Layout can't take a booking in the next 7 days");
 }
 
 /** The booking this garage was just offered: the newest new one. */
@@ -529,12 +540,12 @@ async function bookings(manager: string, driverId: string) {
 }
 
 async function oneNewBooking() {
-  const { customer: name } = await book({
+  const { customer: name, date } = await book({
     days: 0,
     slot: "15:00-18:00",
     pickup: Math.random() > 0.5,
   });
-  say(`New booking from ${name} sent to HSR Layout. It waits 2 minutes for an answer.`);
+  say(`New booking from ${name} for ${date} sent to HSR Layout. It waits 2 minutes for an answer.`);
 }
 
 // ---------------------------------------------------------------- buying
@@ -595,7 +606,14 @@ async function buying(buyer: string) {
     token: admin,
     body: { reference: `UTR${digits(10)}`, date: todayInIndia() },
   });
-  for (const status of ["confirmed", "processing", "packed", "shipped", "out_for_delivery", "delivered"]) {
+  for (const status of [
+    "confirmed",
+    "processing",
+    "packed",
+    "shipped",
+    "out_for_delivery",
+    "delivered",
+  ]) {
     await api("admin", `/orders/${delivered.id}/status`, {
       token: admin,
       body: {
@@ -621,6 +639,41 @@ async function buying(buyer: string) {
     body: { lines, extraDiscount: 0, validityDays: 7, note: "Prices held for a week" },
   });
   say(`  quotation ${quoted.number}: quoted, waiting for your answer`);
+}
+
+/** A dealer's order on credit, shipped so its GST invoice is raised and shows as a due to pay. */
+async function creditDues() {
+  const dealer = await signIn(STAFF.dealer);
+  const branches = await api<{ id: string; isMain: boolean }[]>("b2b", "/company/branches", {
+    token: dealer,
+  });
+  const branch = branches.find((candidate) => candidate.isMain) ?? branches[0];
+  const products = await api<{ items: { id: string }[] }>("b2b", "/catalog/products?pageSize=5", {
+    token: dealer,
+  });
+  const product = products.items[0];
+  if (!branch || !product)
+    throw new ApiFailure("The dealer has no branch or the catalogue is empty");
+  const order = await api<Json>("b2b", "/orders", {
+    token: dealer,
+    body: {
+      branchId: branch.id,
+      payment: { method: "credit" },
+      items: [{ productId: product.id, quantity: 2 }],
+    },
+  });
+  const admin = await adminToken();
+  for (const status of ["confirmed", "processing", "packed", "shipped"]) {
+    await api("admin", `/orders/${order.id}/status`, {
+      token: admin,
+      body: {
+        status,
+        shipment:
+          status === "shipped" ? { courier: "Delhivery", trackingNumber: digits(12) } : null,
+      },
+    });
+  }
+  say(`  order ${order.number}: on credit and shipped, its invoice is due`);
 }
 
 // ---------------------------------------------------------------- run
@@ -710,6 +763,9 @@ async function main() {
 
   say("Buying (Venkatesh, spares):");
   await step("buying", () => buying(hsrTechnician));
+
+  say("Credit (Ganesh, dealer):");
+  await step("credit dues", creditDues);
 
   say("A new booking, unanswered (new for 2 minutes, then missed):");
   await step("new booking", oneNewBooking);

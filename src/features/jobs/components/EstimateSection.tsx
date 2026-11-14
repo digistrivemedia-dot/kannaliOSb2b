@@ -6,7 +6,12 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Text } from "@/components/ui/Text";
 import { NotYet } from "@/features/jobs/components/NotYet";
 import type { EstimateLine, JobCard } from "@/features/jobs/types";
-import { approvedLines, ESTIMATE_KIND_LABELS, sumLines } from "@/features/jobs/utils";
+import {
+  approvedLines,
+  ESTIMATE_KIND_LABELS,
+  LINE_APPROVALS,
+  sumLines,
+} from "@/features/jobs/utils";
 import { formatDateTime, formatNumber, formatPrice } from "@/lib/format";
 
 /** Each line with the customer's answer (approved, waiting, rejected), then the approved totals. */
@@ -61,7 +66,10 @@ function LineRow({ line, divided }: { line: EstimateLine; divided: boolean }) {
             {meta.join(" · ")}
           </Text>
         </View>
-        <StatusBadge status={line.approval} />
+        <StatusBadge
+          word={LINE_APPROVALS[line.approval].word}
+          tone={LINE_APPROVALS[line.approval].tone}
+        />
       </View>
       <View className="flex-row items-baseline justify-between">
         <Text variant="small" tone="muted" tabular>

@@ -28,9 +28,11 @@ const STATUSES = {
   accepted: { tone: "success", word: "Accepted" },
   declined: { tone: "neutral", word: "Declined" },
   missed: { tone: "danger", word: "Missed" },
-  // Estimate lines, as the customer answered them
-  pending: { tone: "warning", word: "Waiting" },
+  // Payments not made yet (orders, invoices)
+  pending: { tone: "warning", word: "Not paid yet" },
   rejected: { tone: "danger", word: "Rejected" },
+  // Returns
+  picked_up: { tone: "info", word: "Picked up" },
   // Orders
   placed: { tone: "neutral", word: "Placed" },
   processing: { tone: "info", word: "Processing" },

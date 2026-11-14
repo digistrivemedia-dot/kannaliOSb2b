@@ -595,7 +595,7 @@ async function buying(buyer: string) {
     token: admin,
     body: { reference: `UTR${digits(10)}`, date: todayInIndia() },
   });
-  for (const status of ["confirmed", "processing", "packed", "shipped", "delivered"]) {
+  for (const status of ["confirmed", "processing", "packed", "shipped", "out_for_delivery", "delivered"]) {
     await api("admin", `/orders/${delivered.id}/status`, {
       token: admin,
       body: {

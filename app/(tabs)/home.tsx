@@ -1,5 +1,3 @@
-import { PlannedTab } from "@/components/layout/PlannedTab";
+import { HomeScreen } from "@/features/dashboard/screens/HomeScreen";
 
-export default function HomeTab() {
-  return <PlannedTab title="Home" screen="HOME" />;
-}
+export default HomeScreen;

@@ -188,3 +188,52 @@ booking to HSR Layout for the new-booking alert.
    - As `shilpa@`: Today → a Ready job → Create bill → Collect payment (cash, see the change) → Hand over.
    - Share PDF on a bill and on a completion report (the share sheet should offer WhatsApp).
    - As `venkatesh@`: Trips → Picked up; later, after billing, Delivered with cash at the door.
+
+---
+
+## Phase 7: Buying
+
+1. **Built**
+   - G50 Shop, `/shop` tab: search, Order by part number, Request a quotation, the offers banner, categories,
+     recent orders with Reorder; the cart with its count in the top bar.
+   - G51 Products, `/products`: cards (name, part number, your price excl. GST, stock at the delivery branch);
+     search; Filters sheet `/products-filters` (category, brand, vehicle fit type → make → model, in stock).
+   - G52 Product, `/product/[id]`: photos, part number, HSN, your price excl. GST against the retail price and MRP,
+     stock, what it fits, quantity stepper, Add to cart.
+   - G53 Order by part number, `/quick-order`: rows of part number and quantity, "Paste a list" (one per line),
+     each row OK / Not found / Out of stock / Limited stock; Add the OK rows to the cart.
+   - G54 Cart, `/cart`: steppers, savings against retail, stock problems in red, subtotal excl. GST, delivery
+     (the backend's B2B rule: ₹250, free from ₹5,000 excl. GST), GST, total.
+   - G55 Checkout, `/checkout`: delivery branch (sheet), PO number, online (demo) / bank transfer (bank details +
+     reference) / credit (only if enabled; off with the reason when short or overdue); totals before the button.
+     `/checkout?quotation=…` orders a quotation at its quoted prices.
+   - G56 Order placed, `/order-placed/[id]`: number, payment per method, what happens next; online orders pay here
+     through the demo payment window (success, or a failure to try).
+   - G57 Orders, `/orders` tab: chips, search by order or PO number, cards with payment state, Reorder.
+   - G58 Order detail, `/order/[id]`: progress, parts, totals, payment, GST invoice (Share PDF), Cancel until
+     shipped (`/order/[id]/cancel`: reason + confirm), Return items once delivered, Reorder.
+   - G59 Returns: request `/order/[id]/return` (parts and quantities left to return, reason, photos, note), list
+     `/returns`, detail `/return/[id]` with progress.
+   - G60 Quotations, `/quotations`: chips, "5 days left". G61 Quotation, `/quotation/[id]`: lines and validity;
+     Accept and order, Reject (confirm) or Ask for a revision (`/quotation/[id]/answer`). G62 New quotation,
+     `/quotation/new`: part-number rows or "Find in the catalogue", a note.
+   - Home for non-garage businesses, `/home` tab (G-Q07): needs you now (overdue credit, quotations to answer),
+     quick links, recent orders with Reorder.
+2. **Differs from the plan**
+   - A line above the branch's stock blocks checkout (the backend refuses it); the website let it through.
+   - The order view has no invoice (BN-11): owners get it from Documents; spares staff are told the owner can share it.
+   - Bank details are the website's placeholders (BN-10).
+   - Credit at checkout is checked against the summary only for those who may see credit (`credit:view`); others
+     get the backend's answer if it's refused.
+3. **API gaps:** BN-10 (bank details), BN-11 (invoice on the order).
+4. **New libraries:** `expo-file-system`: saves a GST invoice PDF from its link before the share sheet (Expo Go has it).
+5. **Check:** `tsc` clean (app and scripts); fresh Android and iOS bundles. 35 flow checks passed as `venkatesh@`
+   (spares), `ganesh@` (dealer with credit), `ravi@` (manager: no shop), `mahesh@` (owner: documents) and Kannali's
+   admin for the other side (quote, deliver): catalogue, filters, part-number check, stock limit, bank / online
+   (success and failure) / credit orders, totals with delivery, cancel before and after shipping, invoice PDF,
+   return with a photo, quotation request, revision, re-quote, accept at the quoted prices, reject rules. No phones.
+6. **Commit:** `feat(buying): shop, cart, checkout, orders, returns and quotations` (the commit with this report).
+7. **Lead to look at**
+   - As `venkatesh@`: Order by part number → paste "AMA93795 2" lines → cart → checkout online → Pay (demo).
+   - As `ganesh@` (non-garage): the Home tab, then checkout on credit.
+   - A quotation "Waiting for you" → Accept and order: checkout shows the quoted prices.

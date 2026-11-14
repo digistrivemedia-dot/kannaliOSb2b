@@ -7,13 +7,10 @@ import { EmptyState } from "@/components/ui/EmptyState";
  * each phase removes its screens from here, and Phase 9 deletes the file.
  */
 export const PLANNED_SCREENS = {
-  G50: { name: "Shop", phase: 7 },
-  G57: { name: "Orders", phase: 7 },
+  G70: { name: "Credit", phase: 8 },
   G75: { name: "More", phase: 8 },
   G83: { name: "Customer and vehicle history", phase: 9 },
   G86: { name: "Notifications", phase: 9 },
-  /** The non-garage Home tab (G-Q07). */
-  HOME: { name: "Home", phase: 7 },
 } as const;
 
 export type PlannedScreen = keyof typeof PLANNED_SCREENS;
@@ -34,7 +31,7 @@ export function ComingSoon({ screen }: { screen: PlannedScreen }) {
     <EmptyState
       icon={Hammer}
       title={`${name} comes next`}
-      message={`This screen (${screen === "HOME" ? "Home" : screen}) is built in phase ${phase}.`}
+      message={`This screen (${screen}) is built in phase ${phase}.`}
     />
   );
 }

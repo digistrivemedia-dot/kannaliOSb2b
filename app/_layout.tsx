@@ -18,6 +18,7 @@ import { UnreachableScreen } from "@/features/auth/screens/UnreachableScreen";
 import { WordmarkSplash } from "@/features/auth/screens/WordmarkSplash";
 import { useRegisterDraft } from "@/features/auth/register-draft-store";
 import { useAuth } from "@/features/auth/store";
+import { useCart } from "@/features/cart/store";
 import { useBranchStore } from "@/features/company/branch-store";
 import { useDraftStore } from "@/lib/drafts";
 import { queryClient } from "@/lib/query-client";
@@ -35,7 +36,7 @@ const sheet = {
 };
 
 /** The stores kept on the phone, read back before the first screen shows. */
-const SAVED_STORES = [useBranchStore, useRegisterDraft, useDraftStore];
+const SAVED_STORES = [useBranchStore, useRegisterDraft, useDraftStore, useCart];
 
 function useSavedChoicesLoaded() {
   const allLoaded = () => SAVED_STORES.every((store) => store.persist.hasHydrated());
@@ -115,6 +116,28 @@ export default function RootLayout() {
               <Stack.Screen name="job/[id]/report" />
               <Stack.Screen name="job/[id]/assign-driver" options={sheet} />
               <Stack.Screen name="walk-in" />
+              <Stack.Screen name="products" />
+              <Stack.Screen
+                name="products-filters"
+                options={{ ...sheet, sheetAllowedDetents: [0.9] }}
+              />
+              <Stack.Screen name="product/[id]" />
+              <Stack.Screen name="quick-order" />
+              <Stack.Screen name="cart" />
+              <Stack.Screen name="checkout" />
+              <Stack.Screen name="order-placed/[id]" options={{ gestureEnabled: false }} />
+              <Stack.Screen name="order/[id]/index" />
+              <Stack.Screen
+                name="order/[id]/cancel"
+                options={{ ...sheet, sheetAllowedDetents: [0.8, 1] }}
+              />
+              <Stack.Screen name="order/[id]/return" />
+              <Stack.Screen name="returns" />
+              <Stack.Screen name="return/[id]" />
+              <Stack.Screen name="quotations" />
+              <Stack.Screen name="quotation/new" />
+              <Stack.Screen name="quotation/[id]/index" />
+              <Stack.Screen name="quotation/[id]/answer" options={sheet} />
               <Stack.Screen
                 name="jobs-filters"
                 options={{ ...sheet, sheetAllowedDetents: [0.75, 1] }}

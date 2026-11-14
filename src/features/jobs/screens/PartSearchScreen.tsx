@@ -13,7 +13,7 @@ import { usePartSearch } from "@/features/jobs/queries";
 import { formatPrice } from "@/lib/format";
 import { useDebounced } from "@/lib/use-debounced";
 
-/** Find a SpareX part for an estimate line (form sheet). Picking one fills its name, number and price. */
+/** Find a SpareX part (form sheet), for an estimate line or a quotation row. */
 export function PartSearchScreen() {
   const [search, setSearch] = useState("");
   const q = useDebounced(search.trim());
@@ -32,7 +32,7 @@ export function PartSearchScreen() {
         <EmptyState
           icon={PackageSearch}
           title="Search by name or part number"
-          message="Garages sell parts on at MRP; the estimate shows it without GST."
+          message="Shown with the MRP. On an estimate, the price is filled in without GST."
         />
       ) : results.isPending ? (
         <View className="gap-2 p-4" accessible accessibilityLabel="Loading">
@@ -45,7 +45,7 @@ export function PartSearchScreen() {
         <EmptyState
           icon={PackageSearch}
           title="No parts match"
-          message="Try the part number, or type the part on the line yourself."
+          message="Try the part number, or type it in yourself."
         />
       ) : (
         <ScrollView contentContainerClassName="pb-8" keyboardShouldPersistTaps="handled">

@@ -1,5 +1,3 @@
-import { PlannedTab } from "@/components/layout/PlannedTab";
+import { OrdersScreen } from "@/features/orders/screens/OrdersScreen";
 
-export default function OrdersTab() {
-  return <PlannedTab title="Orders" screen="G57" />;
-}
+export default OrdersScreen;

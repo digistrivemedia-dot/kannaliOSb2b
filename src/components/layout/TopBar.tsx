@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { Bell, ChevronDown, MapPin } from "lucide-react-native";
+import { Bell, ChevronDown, MapPin, ShoppingCart } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -8,16 +8,20 @@ import { IconButton } from "@/components/ui/IconButton";
 import { Text } from "@/components/ui/Text";
 import { can } from "@/features/auth/permissions";
 import { useSession } from "@/features/auth/store";
+import { useCartCount } from "@/features/cart/store";
 import { useActiveBranch } from "@/features/company/use-active-branch";
 import { colors } from "@/lib/theme";
 
 type TopBarProps = {
   title: string;
   subtitle?: string;
+  /** Shows the cart with its item count (the Shop tab). */
+  showCart?: boolean;
 };
 
 /** The navy bar of the main tabs: the branch (owners tap it to switch), notifications and the title. */
-export function TopBar({ title, subtitle }: TopBarProps) {
+export function TopBar({ title, subtitle, showCart = false }: TopBarProps) {
+  const cartCount = useCartCount();
   const insets = useSafeAreaInsets();
   const session = useSession();
   const branch = useActiveBranch();
@@ -41,13 +45,23 @@ export function TopBar({ title, subtitle }: TopBarProps) {
           </Text>
           {canSwitch && <ChevronDown size={18} color={colors.navy[200]} />}
         </Pressable>
-        <IconButton
-          icon={Bell}
-          label="Notifications"
-          tone="inverse"
-          onPress={() => router.push(plannedHref("G86"))}
-          className="-mr-3"
-        />
+        <View className="-mr-3 flex-row">
+          {showCart && (
+            <IconButton
+              icon={ShoppingCart}
+              label="Cart"
+              tone="inverse"
+              badge={cartCount}
+              onPress={() => router.push("/cart")}
+            />
+          )}
+          <IconButton
+            icon={Bell}
+            label="Notifications"
+            tone="inverse"
+            onPress={() => router.push(plannedHref("G86"))}
+          />
+        </View>
       </View>
       <Text variant="title" tone="inverse" accessibilityRole="header" numberOfLines={2}>
         {title}

@@ -1,5 +1,3 @@
-import { PlannedTab } from "@/components/layout/PlannedTab";
+import { ShopScreen } from "@/features/catalog/screens/ShopScreen";
 
-export default function ShopTab() {
-  return <PlannedTab title="Shop" screen="G50" />;
-}
+export default ShopScreen;

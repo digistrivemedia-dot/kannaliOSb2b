@@ -69,6 +69,13 @@ export const INSPECTION_RESULTS: Record<InspectionResult, { word: string; tone: 
   replace: { word: "Replace", tone: "danger" },
 };
 
+/** The customer's answer on an estimate line, in words. */
+export const LINE_APPROVALS: Record<EstimateLine["approval"], { word: string; tone: Tone }> = {
+  pending: { word: "Waiting", tone: "warning" },
+  approved: { word: "Approved", tone: "success" },
+  rejected: { word: "Rejected", tone: "danger" },
+};
+
 export const ESTIMATE_KIND_LABELS: Record<EstimateLine["kind"], string> = {
   labour: "Labour",
   service: "Service",

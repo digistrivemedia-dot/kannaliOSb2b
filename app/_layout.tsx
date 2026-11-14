@@ -95,6 +95,17 @@ export default function RootLayout() {
               <Stack.Screen name="job/[id]/index" />
               <Stack.Screen name="job/[id]/check-in" />
               <Stack.Screen name="job/[id]/assign-technician" options={sheet} />
+              <Stack.Screen name="job/[id]/inspection" />
+              <Stack.Screen name="job/[id]/estimate" />
+              <Stack.Screen name="job/[id]/answer" />
+              <Stack.Screen name="job/[id]/extra-work" />
+              <Stack.Screen name="job/[id]/quality-check" />
+              <Stack.Screen name="my-job/[id]/index" />
+              <Stack.Screen
+                name="my-job/[id]/decline"
+                options={{ ...sheet, sheetAllowedDetents: [0.7, 1] }}
+              />
+              <Stack.Screen name="part-search" options={{ ...sheet, sheetAllowedDetents: [0.9] }} />
               <Stack.Screen name="walk-in" />
               <Stack.Screen
                 name="jobs-filters"

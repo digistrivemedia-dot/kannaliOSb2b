@@ -272,3 +272,42 @@ export type CheckInRequest = Omit<CheckIn, "at" | "by">;
 
 /** A technician of the branch and how many jobs they have on now. */
 export type TechnicianLoad = { id: string; name: string; activeJobs: number };
+
+export type InspectionRequest = { items: InspectionItem[] };
+
+/** A line as the estimate builder sends it; the customer's answer is recorded separately. */
+export type EstimateLineInput = Omit<EstimateLine, "approval" | "isExtra" | "isDone">;
+
+export type ApprovalRequest = {
+  /** The customer's answer for each line waiting on them. */
+  decisions: Record<string, "approved" | "rejected">;
+  /** How they answered, e.g. "By phone". */
+  note: string;
+};
+
+export type ProgressRequest = {
+  text: string;
+  photos: string[];
+  /** True when the technician found more work that needs the customer's approval. */
+  isExtraWork: boolean;
+};
+
+export type QualityCheckRequest = Omit<QualityCheck, "at" | "by">;
+
+/** A service on the garage's own price list (owners read it from the garage profile). */
+export type GarageService = {
+  id: string;
+  name: string;
+  priceInPaise: number;
+  durationMinutes: number;
+};
+
+/** A SpareX part found for an estimate line. */
+export type PartMatch = {
+  id: string;
+  partNumber: string;
+  name: string;
+  brand: string;
+  mrpInPaise: number;
+  gstRatePercent: number;
+};

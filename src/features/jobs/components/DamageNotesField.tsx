@@ -12,11 +12,12 @@ import type { CheckInValues } from "@/features/jobs/schemas";
 
 /** Damage already on the vehicle: where, what, and a photo, so nobody is blamed for it later. */
 export function DamageNotesField({ control }: { control: Control<CheckInValues> }) {
-  const { fields, append, remove } = useFieldArray({ control, name: "damages" });
+  // Damage notes have their own "id" (sent to the API), so row keys go under another name.
+  const { fields, append, remove } = useFieldArray({ control, name: "damages", keyName: "rowKey" });
   return (
     <View className="gap-3">
       {fields.map((field, index) => (
-        <Card key={field.id} className="gap-3">
+        <Card key={field.rowKey} className="gap-3">
           <View className="flex-row items-center justify-between">
             <Text weight="semibold">Damage {index + 1}</Text>
             <IconButton

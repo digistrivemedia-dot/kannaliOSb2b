@@ -88,13 +88,19 @@ function JobCardContent({ job }: { job: JobCard }) {
 /** While a technician has the job, the desk can hand it to someone else (website `JobStatusCard`). */
 function secondaryActions(job: JobCard, roles: Role[]) {
   const isWorking = job.status === "approved" || job.status === "in_progress";
-  if (!isWorking || !job.technician || !can(roles, "jobs:manage")) return [];
+  if (!isWorking || !can(roles, "jobs:manage")) return [];
+  const extraWork = {
+    label: "Add extra work",
+    onPress: () => router.push({ pathname: "/job/[id]/extra-work", params: { id: job.id } }),
+  };
+  if (!job.technician) return [extraWork];
   return [
     {
       label: "Reassign technician",
       onPress: () =>
         router.push({ pathname: "/job/[id]/assign-technician", params: { id: job.id } }),
     },
+    extraWork,
   ];
 }
 

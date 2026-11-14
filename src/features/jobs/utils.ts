@@ -220,3 +220,47 @@ export const TODAY_TILES: JobTab[] = [
   "ready",
   "payment_pending",
 ];
+
+/** The inspection checklist, by area (website `INSPECTION_CHECKLIST`, for two-wheelers). */
+export const INSPECTION_CHECKLIST: { area: string; items: string[] }[] = [
+  { area: "Engine", items: ["Engine oil level and colour", "Oil leaks", "Idling and pick-up"] },
+  { area: "Brakes", items: ["Front brake", "Rear brake", "Brake fluid"] },
+  { area: "Electricals", items: ["Lights and indicators", "Horn", "Battery and self start"] },
+  {
+    area: "Tyres and wheels",
+    items: ["Front tyre tread and pressure", "Rear tyre tread and pressure", "Wheel bearings"],
+  },
+  { area: "Chain and transmission", items: ["Chain slack and wear", "Clutch play"] },
+  {
+    area: "Suspension and body",
+    items: ["Front forks", "Rear shock absorbers", "Mirrors and side stand"],
+  },
+];
+
+/** Standard quality checks, after the job's own work lines (website `QUALITY_CHECKLIST`). */
+export const QUALITY_CHECKLIST = [
+  "Road test done",
+  "No oil or fuel leaks",
+  "Brakes bite evenly",
+  "Old parts kept for the customer",
+  "Vehicle washed and cleaned",
+];
+
+/** The quality checklist for a job: its own approved work, then the standard checks. */
+export function qualityChecklistFor(job: Pick<JobCard, "estimate">): string[] {
+  const work = approvedLines(job.estimate?.lines ?? [])
+    .filter((line) => line.kind === "labour" || line.kind === "service")
+    .map((line) => `${line.description}: done properly`);
+  return [...work, ...QUALITY_CHECKLIST];
+}
+
+/**
+ * Lines whose price the server fixes (FRONTEND-CHANGES F-39): the booked package at the admin's
+ * price, and the pick-up and drop fee accepted with the booking.
+ */
+export function isFixedLine(jobId: string, lineId: string): boolean {
+  return lineId.startsWith(`${jobId}-booked-`) || lineId === `${jobId}-pickup-drop`;
+}
+
+/** GST on garage services is 18% (backend B-44). */
+export const SERVICE_GST_PERCENT = 18;

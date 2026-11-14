@@ -7,13 +7,24 @@ import {
 } from "@tanstack/react-query";
 
 import {
+  addProgressNote,
   assignTechnician,
   checkIn,
   createWalkIn,
+  finishWork,
+  getGarageServices,
   getJobCard,
   getJobCards,
   getTechnicians,
   lookupVehicle,
+  recordApproval,
+  recordQualityCheck,
+  respondToJob,
+  saveInspection,
+  searchParts,
+  sendEstimate,
+  sendRevision,
+  setLineDone,
 } from "@/features/jobs/api";
 import type { CheckInRequest, JobCard, JobCardFilters } from "@/features/jobs/types";
 import { JOB_TABS, type JobTab } from "@/features/jobs/utils";
@@ -140,5 +151,43 @@ export function useAssignTechnician(id: string) {
   return useMutation({
     mutationFn: (technicianId: string) => assignTechnician(id, technicianId),
     onSuccess: changed,
+  });
+}
+
+/** Every change to a job answers the job card; one hook per change keeps screens short. */
+function useJobMutation<T>(id: string, change: (id: string, input: T) => Promise<JobCard>) {
+  const changed = useJobChanged();
+  return useMutation({ mutationFn: (input: T) => change(id, input), onSuccess: changed });
+}
+
+export const useSaveInspection = (id: string) => useJobMutation(id, saveInspection);
+export const useSendEstimate = (id: string) => useJobMutation(id, sendEstimate);
+export const useSendRevision = (id: string) => useJobMutation(id, sendRevision);
+export const useRecordApproval = (id: string) => useJobMutation(id, recordApproval);
+export const useRespondToJob = (id: string) => useJobMutation(id, respondToJob);
+export const useAddProgressNote = (id: string) => useJobMutation(id, addProgressNote);
+export const useRecordQualityCheck = (id: string) => useJobMutation(id, recordQualityCheck);
+export const useFinishWork = (id: string) =>
+  useJobMutation(id, (jobId: string, _: void) => finishWork(jobId));
+export const useSetLineDone = (id: string) =>
+  useJobMutation(id, (jobId: string, input: { lineId: string; isDone: boolean }) =>
+    setLineDone(jobId, input.lineId, input.isDone),
+  );
+
+/** The garage's own services and prices, for owners building an estimate. */
+export function useGarageServices({ enabled = true } = {}) {
+  return useQuery({
+    queryKey: ["garage", "services"],
+    queryFn: getGarageServices,
+    enabled,
+    staleTime: 5 * 60_000,
+  });
+}
+
+export function usePartSearch(q: string) {
+  return useQuery({
+    queryKey: ["catalog", "part-search", q],
+    queryFn: () => searchParts(q),
+    enabled: q.length >= 2,
   });
 }

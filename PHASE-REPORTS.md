@@ -114,3 +114,44 @@ booking to HSR Layout for the new-booking alert.
      half way: the form is still filled in when you come back.
    - Today → "In progress" tile opens Jobs on that chip; Filters → a technician; the count chips follow.
    - On a job assigned to Venkatesh, "Reassign technician" from the job card.
+
+---
+
+## Phase 5: The work
+
+1. **Built**
+   - G35 Inspection, `/job/[id]/inspection`: one area per screen ("Brakes, 2 of 6") with big OK / Needs
+     attention / Replace buttons; a note and photos for anything not OK; a summary; for the desk it goes straight
+     on to the estimate. Technicians can inspect (`jobs:inspect`).
+   - G36 Estimate, `/job/[id]/estimate`: starts with the booked package (locked at its fixed price), the pick-up
+     fee and a line per flagged item; lines as cards (kind, description, part number, quantity stepper, price excl.
+     GST on the keypad, GST rate); owners pick services from their price list and search SpareX parts (MRP excl.
+     GST); live totals; Send to customer.
+   - G37 Record customer's answer, `/job/[id]/answer`: Approve / Reject per line, Approve all / Reject all, how
+     they answered; rejecting the whole first estimate asks to confirm that the job closes with no fee (pick-up
+     fee only with pick-up).
+   - G38 Extra work, `/job/[id]/extra-work`: the approved work, then new priced lines sent for approval (desk); a
+     technician reports what they found with photos instead (the price comes from the desk).
+   - G39 Quality check, `/job/[id]/quality-check`: the job's own work plus the standard checks; Pass needs every
+     tick; Send back for rework needs a note.
+   - G40 My jobs, `/my-jobs` tab: New for you, To inspect, Working on, Waiting; refreshed every 15 s.
+   - G41 My job, `/my-job/[id]`: Accept job or Can't take it (reason sheet `/my-job/[id]/decline`); tasks and
+     parts used to tick off; updates with photos; Found extra work; "Done, send to QC" stays off until every task
+     is ticked.
+   - Job card: "Add extra work" and "Reassign technician" while the job is being serviced.
+2. **Differs from the plan**
+   - Managers type services and parts on an estimate (BN-07, BN-08); owners pick them.
+   - A technician's "Found extra work" is a flagged update for the desk: pricing extra work needs `jobs:manage` in
+     the backend (as on the website).
+3. **API gaps:** BN-07 (services for the desk), BN-08 (part search for the desk).
+4. **New libraries:** none.
+5. **Check:** `tsc` clean (app and scripts); fresh Android and iOS bundles (`expo export`). 25 flow checks passed
+   against the backend as `ravi@` (manager), `venkatesh@` (technician), `mahesh@` (owner): inspection with photos,
+   estimate with the booked package's fixed price kept, partial approval, extra work rejected, accept, ticks, notes,
+   finish blocked until ticked, rework (tasks open again) then pass, desk extra work, hand back. No phones.
+   Testing note: many owner sign-ins in an hour hit the backend's SMS limit for Mahesh's number (BN-03 would avoid it).
+6. **Commit:** `feat(jobs): inspection, estimate, approval, extra work, QC and technician screens` (the commit with this report).
+7. **Lead to look at**
+   - As `venkatesh@`: My jobs → a job to inspect → the six areas, then a job "New for you" → Accept → tick tasks → Done.
+   - As `ravi@`: an estimate from an inspection (lines pre-filled); then Record customer's answer, rejecting one line.
+   - As `mahesh@`: on an estimate, add a Part and use "Find a SpareX part".

@@ -2,8 +2,8 @@
 
 One report per phase, in the `CLAUDE.md` §14 format. Phase 1's report was given in the chat.
 
-**How every phase was checked.** `npx tsc --noEmit` for the app and for `scripts/`; the Android and iOS bundles built
-through Metro (`expo start`, `/entry.bundle?platform=android|ios`); and each flow run against `npm run dev:memory`
+**How every phase was checked.** `npx tsc --noEmit` for the app and for `scripts/`; fresh Android and iOS bundles
+with `npx expo export --platform android --platform ios --clear` (from Phase 4; see the Phase 3 note); and each flow run against `npm run dev:memory`
 with the logins named, calling the same endpoints with the same bodies the screens send. **No phone was available**
 to the agent: every phase still needs the lead's walk-through in Expo Go on Android and iPhone (§12).
 
@@ -68,7 +68,8 @@ booking to HSR Layout for the new-booking alert.
    - The alert has no sound of its own until push notifications (Phase 10, G-Q05); it vibrates instead.
 3. **API gaps:** none.
 4. **New libraries:** `prettier` (dev only): one format for every file, as the website repo.
-5. **Check:** `tsc` clean (app and scripts); Android and iOS bundles build. 17 flow checks passed against the
+5. **Check:** `tsc` clean (app and scripts). Bundles: the Metro server used for this check had stopped seeing file
+   changes, so its bundles were stale; Phase 4's fresh `expo export` build includes and compiles Phase 3's code. 17 flow checks passed against the
    backend as `ravi@` (manager) and `shilpa@` (billing: no bookings), with bookings sent by `npm run dev-booking`.
    No phones.
 6. **Commit:** `feat(bookings): new booking alert, bookings list and booking detail` (the commit with this report).
@@ -76,3 +77,40 @@ booking to HSR Layout for the new-booking alert.
    - Signed in as `ravi@` on Today, run `npm run dev-booking`: within 15 s the alert opens and the phone buzzes.
    - Let a booking run out on the alert: it turns into "This booking went to another garage".
    - Decline a booking: pick "Other", type a reason, confirm; it moves to the Declined tab.
+
+---
+
+## Phase 4: Jobs
+
+1. **Built**
+   - G30 Jobs, `/jobs` tab: search (plate, job number, vehicle), status chips with counts (All open, Arriving, On
+     the road, Received, Waiting for customer, In progress, Ready, Payment pending, To hand over, Completed,
+     Closed), a Filters sheet `/jobs-filters` (technician, opened when; kept for next time), job rows with the next
+     step this user takes; open work most urgent first, finished newest first; paged; pull to refresh. Today's
+     tiles open their chip.
+   - G31 Job card, `/job/[id]`: the next step now opens check-in and assign technician; "Reassign technician"
+     while a technician has the job; a closed job says "Closed" with its reason.
+   - G32 New walk-in, `/walk-in`: plate (formats as typed) → on file: vehicle and owner to confirm; new: type,
+     make, model, customer name and mobile; complaints → job at "Vehicle received" → check-in.
+   - G33 Check-in, `/job/[id]/check-in` (also "Record pick-up"): odometer on the number keypad, fuel in five big
+     steps, 1–6 vehicle photos (camera first, shrunk under the 300 KB limit), damage notes with photos,
+     complaints → "Job card created".
+   - G34 Assign technician, `/job/[id]/assign-technician` (form sheet): technicians with open job counts, fewest
+     first; assign or reassign.
+   - Forms keep their draft on the phone until sent (walk-in, check-in); a save that couldn't reach the server is
+     sent again on its own.
+2. **Differs from the plan**
+   - Search can't find a customer by name yet (BN-05); the box says what it does search.
+   - Make and model are typed, not picked (BN-06), as on the website.
+   - The technician filter is for those who assign technicians (`jobs:manage`); billing filters by date only.
+3. **API gaps:** BN-05 (search by customer), BN-06 (makes and models for the desk).
+4. **New libraries:** none.
+5. **Check:** `tsc` clean (app and scripts); fresh Android and iOS bundles (`expo export`) contain the new screens.
+   27 flow checks passed against the backend as `ravi@` (manager), `shilpa@` (billing), `imran@` (technician:
+   only his jobs) and `venkatesh@`. No phones.
+6. **Commit:** `feat(jobs): job list, walk-in, check-in and assign technician` (the commit with this report).
+7. **Lead to look at**
+   - New walk-in with a plate typed in lower case: it formats; then check-in with the camera, and close the app
+     half way: the form is still filled in when you come back.
+   - Today → "In progress" tile opens Jobs on that chip; Filters → a technician; the count chips follow.
+   - On a job assigned to Venkatesh, "Reassign technician" from the job card.

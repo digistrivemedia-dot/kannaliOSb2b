@@ -5,6 +5,7 @@ import { create } from "zustand";
 import * as authApi from "@/features/auth/api";
 import type { Session } from "@/features/auth/types";
 import { ApiError, setUnauthorizedHandler } from "@/lib/api-client";
+import { useDraftStore } from "@/lib/drafts";
 import { queryClient } from "@/lib/query-client";
 import { clearToken, getToken, saveToken } from "@/lib/secure-token";
 
@@ -63,6 +64,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     await clearToken();
     queryClient.clear();
     await AsyncStorage.clear();
+    useDraftStore.getState().clearAll();
     resets.forEach((reset) => reset());
     set({ status: "signed_out", session: null });
   },

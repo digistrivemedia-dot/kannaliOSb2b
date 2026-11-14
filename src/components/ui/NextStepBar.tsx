@@ -14,10 +14,30 @@ export type NextStepView =
   /** Nothing left to do on this job. */
   | { kind: "done"; text: string };
 
+type NextStepBarProps = {
+  step: NextStepView;
+  /** Other things this user can do now, as outline buttons under the main one. */
+  secondary?: { label: string; onPress: () => void }[];
+};
+
 /** The bottom bar of a job card: always the one next step, or who has it. */
-export function NextStepBar({ step }: { step: NextStepView }) {
+export function NextStepBar({ step, secondary = [] }: NextStepBarProps) {
   return (
     <BottomBar>
+      {secondary.length > 0 && (
+        <View className="flex-row gap-2">
+          {secondary.map((action) => (
+            <Button
+              key={action.label}
+              variant="outline"
+              label={action.label}
+              onPress={action.onPress}
+              className="flex-1"
+              fullWidth
+            />
+          ))}
+        </View>
+      )}
       {step.kind === "action" ? (
         <Button size="main" label={step.label} onPress={step.onPress} />
       ) : (

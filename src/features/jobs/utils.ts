@@ -76,6 +76,9 @@ export const ESTIMATE_KIND_LABELS: Record<EstimateLine["kind"], string> = {
   consumable: "Consumable",
 };
 
+/** Job photos are stored inline, up to 300 KB each (FRONTEND-CHANGES F-39); a little under, to be safe. */
+export const MAX_JOB_PHOTO_BYTES = 290 * 1024;
+
 /** "Honda Activa 6G" */
 export function vehicleName(vehicle: Pick<JobVehicle, "make" | "model">): string {
   return `${vehicle.make} ${vehicle.model}`.trim();
@@ -179,19 +182,41 @@ export function sumLines(lines: EstimateLine[]) {
   return { subtotalInPaise, gstInPaise, totalInPaise: subtotalInPaise + gstInPaise };
 }
 
+/** Jobs still in the garage's hands. */
+export const ACTIVE_JOB_STATUSES = JOB_FLOW.filter(
+  (status) => status !== "booked" && status !== "completed",
+);
+
 /**
- * Today's count tiles (APP-SCREENS G20): the statuses grouped by what the garage does next, so
- * nobody has to know the sixteen statuses. Each tile opens the job list filtered to its group.
+ * The job list's chips: every open job, then the statuses grouped by what the garage does next (the
+ * website's groups, so nobody has to know the sixteen statuses), then the finished ones. Today's
+ * count tiles open the same chips.
  */
-export const JOB_COUNT_GROUPS = {
-  received: {
-    label: "Received",
-    statuses: ["vehicle_received", "job_card_created", "inspection"],
-  },
+export const JOB_TABS = {
+  open: { label: "All open", statuses: ACTIVE_JOB_STATUSES },
+  arriving: { label: "Arriving", statuses: ["confirmed"] },
+  on_the_road: { label: "On the road", statuses: ["out_for_pickup", "out_for_delivery"] },
+  received: { label: "Received", statuses: ["vehicle_received", "job_card_created", "inspection"] },
   awaiting_approval: { label: "Waiting for customer", statuses: ["awaiting_approval"] },
   in_progress: { label: "In progress", statuses: ["approved", "in_progress", "quality_check"] },
   ready: { label: "Ready", statuses: ["ready"] },
   payment_pending: { label: "Payment pending", statuses: ["payment_pending"] },
+  paid: { label: "To hand over", statuses: ["paid"] },
+  completed: { label: "Completed", statuses: ["completed"] },
+  closed: { label: "Closed", statuses: ["closed"] },
 } satisfies Record<string, { label: string; statuses: JobStatus[] }>;
 
-export type JobCountGroup = keyof typeof JOB_COUNT_GROUPS;
+export type JobTab = keyof typeof JOB_TABS;
+
+export function isJobTab(value: unknown): value is JobTab {
+  return typeof value === "string" && value in JOB_TABS;
+}
+
+/** Today's count tiles, in order. */
+export const TODAY_TILES: JobTab[] = [
+  "received",
+  "awaiting_approval",
+  "in_progress",
+  "ready",
+  "payment_pending",
+];

@@ -10,10 +10,16 @@ function shouldRetry(failureCount: number, error: unknown): boolean {
   return failureCount < 3;
 }
 
+function retryWhenOffline(failureCount: number, error: unknown): boolean {
+  return error instanceof ApiError && error.code === "network" && failureCount < 2;
+}
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: { staleTime: 30_000, retry: shouldRetry },
-    mutations: { retry: false },
+    // A save that couldn't reach the server (no connection) is sent again on its own, twice. If the
+    // first one did arrive, the server refuses the repeat (the job has already moved on).
+    mutations: { retry: retryWhenOffline, retryDelay: 2000 },
   },
 });
 

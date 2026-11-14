@@ -2,7 +2,6 @@ import { router } from "expo-router";
 import { CarFront } from "lucide-react-native";
 
 import { BottomBar } from "@/components/layout/BottomBar";
-import { plannedHref } from "@/components/layout/ComingSoon";
 import { Screen } from "@/components/layout/Screen";
 import { TopBar } from "@/components/layout/TopBar";
 import { Button } from "@/components/ui/Button";
@@ -15,6 +14,7 @@ import { TodayCounts } from "@/features/dashboard/components/TodayCounts";
 import { TodaysBookings } from "@/features/dashboard/components/TodaysBookings";
 import { greeting, jobsNeedingYou, NEEDS_YOU_STATUSES } from "@/features/dashboard/utils";
 import { useJobCards, useJobCounts } from "@/features/jobs/queries";
+import { TODAY_TILES } from "@/features/jobs/utils";
 import { formatWeekday, toIndiaDate } from "@/lib/format";
 import { useNow } from "@/lib/use-now";
 
@@ -51,7 +51,7 @@ export function TodayScreen() {
     },
     { live: true },
   );
-  const counts = useJobCounts(branch.id);
+  const counts = useJobCounts(branch.id, TODAY_TILES);
 
   // A booking whose time ran out has gone to another garage, even before the next refetch.
   const openBookings = (newBookings.data?.items ?? []).filter(
@@ -80,7 +80,7 @@ export function TodayScreen() {
               size="main"
               icon={CarFront}
               label="New walk-in"
-              onPress={() => router.push(plannedHref("G32"))}
+              onPress={() => router.push("/walk-in")}
             />
           </BottomBar>
         ) : undefined

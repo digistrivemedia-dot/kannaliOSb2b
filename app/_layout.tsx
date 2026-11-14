@@ -19,6 +19,7 @@ import { WordmarkSplash } from "@/features/auth/screens/WordmarkSplash";
 import { useRegisterDraft } from "@/features/auth/register-draft-store";
 import { useAuth } from "@/features/auth/store";
 import { useBranchStore } from "@/features/company/branch-store";
+import { useDraftStore } from "@/lib/drafts";
 import { queryClient } from "@/lib/query-client";
 import { colors, radius } from "@/lib/theme";
 
@@ -34,7 +35,7 @@ const sheet = {
 };
 
 /** The stores kept on the phone, read back before the first screen shows. */
-const SAVED_STORES = [useBranchStore, useRegisterDraft];
+const SAVED_STORES = [useBranchStore, useRegisterDraft, useDraftStore];
 
 function useSavedChoicesLoaded() {
   const allLoaded = () => SAVED_STORES.every((store) => store.persist.hasHydrated());
@@ -91,7 +92,14 @@ export default function RootLayout() {
             <Stack.Screen name="index" />
             <Stack.Protected guard={isSignedIn}>
               <Stack.Screen name="(tabs)" options={{ statusBarStyle: "light" }} />
-              <Stack.Screen name="job/[id]" />
+              <Stack.Screen name="job/[id]/index" />
+              <Stack.Screen name="job/[id]/check-in" />
+              <Stack.Screen name="job/[id]/assign-technician" options={sheet} />
+              <Stack.Screen name="walk-in" />
+              <Stack.Screen
+                name="jobs-filters"
+                options={{ ...sheet, sheetAllowedDetents: [0.75, 1] }}
+              />
               <Stack.Screen name="booking/[id]/index" />
               <Stack.Screen
                 name="booking/[id]/decline"

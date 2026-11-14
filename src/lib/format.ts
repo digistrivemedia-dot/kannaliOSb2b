@@ -155,3 +155,11 @@ export function initials(name: string): string {
 export function firstName(name: string): string {
   return name.trim().split(/\s+/)[0] ?? name;
 }
+
+/** Indian plates (KA 01 AB 1234) and Bharat series plates (22 BH 1234 AA), as on the website. */
+export function isValidPlate(plate: string): boolean {
+  const compact = plate.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  return (
+    /^[A-Z]{2}\d{1,2}[A-Z]{0,3}\d{4}$/.test(compact) || /^\d{2}BH\d{4}[A-Z]{1,2}$/.test(compact)
+  );
+}

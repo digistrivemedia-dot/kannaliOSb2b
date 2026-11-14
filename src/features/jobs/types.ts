@@ -246,3 +246,29 @@ export type JobCardFilters = ListParams<"createdAt" | "dueAt"> & {
   /** Matches the job number, number plate or customer name. */
   q?: string;
 };
+
+/** What the plate lookup finds: the vehicle on file and its owner. */
+export type VehicleLookup = {
+  vehicle: JobVehicle & { year?: number; customerId: string };
+  customer: { id: string; name: string; phone: string; email?: string; hasAppAccount: boolean };
+};
+
+export type WalkInRequest = {
+  branchId: string;
+  /** An existing vehicle, or the details of a new one with its customer. */
+  vehicleId?: string;
+  newVehicle?: {
+    plate: string;
+    type: VehicleType;
+    make: string;
+    model: string;
+    customer: { name: string; phone: string };
+  };
+  complaints: string[];
+};
+
+/** Photos go inline as data URLs (up to 300 KB each), or as the links of photos already sent. */
+export type CheckInRequest = Omit<CheckIn, "at" | "by">;
+
+/** A technician of the branch and how many jobs they have on now. */
+export type TechnicianLoad = { id: string; name: string; activeJobs: number };

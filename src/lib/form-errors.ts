@@ -10,11 +10,13 @@ export function applyApiErrors<T extends FieldValues>(
   error: unknown,
   fields: readonly Path<T>[],
   setError: UseFormSetError<T>,
+  /** API field names that differ from the form's, e.g. "newVehicle.customer.phone" → "customerPhone". */
+  aliases: Record<string, Path<T>> = {},
 ): string | null {
   if (!(error instanceof ApiError) || !error.fieldErrors) return errorMessage(error);
   let isShown = false;
   for (const [field, messages] of Object.entries(error.fieldErrors)) {
-    const known = fields.find((name) => name === field);
+    const known = aliases[field] ?? fields.find((name) => name === field);
     if (known && messages[0]) {
       setError(known, { message: messages[0] });
       isShown = true;

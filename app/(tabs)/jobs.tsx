@@ -1,5 +1,3 @@
-import { PlannedTab } from "@/components/layout/PlannedTab";
+import { JobsScreen } from "@/features/jobs/screens/JobsScreen";
 
-export default function JobsTab() {
-  return <PlannedTab title="Jobs" screen="G30" />;
-}
+export default JobsScreen;

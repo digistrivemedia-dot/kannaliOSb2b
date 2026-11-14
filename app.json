@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "Kannali Garage OS",
+    "slug": "kannali-garage-os",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "kannaligarageos",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#f8fafc",
+    "ios": {
+      "bundleIdentifier": "in.kannaligarage.os",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "in.kannaligarage.os",
+      "adaptiveIcon": {
+        "backgroundColor": "#0b2545",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0b2545",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160
+        }
+      ],
+      "expo-font",
+      "expo-image",
+      "expo-sharing",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Kannali Garage OS uses the camera to photograph vehicles at check-in, inspection and handover.",
+          "photosPermission": "Kannali Garage OS lets you pick vehicle photos from your gallery."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

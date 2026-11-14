@@ -260,6 +260,12 @@ checkout, quick-order, orders, returns, quotations, credit, payments, documents,
 
 - **One phase at a time**, in order. Build only what `APP-SCREENS.md` lists. Nothing invented, nothing skipped.
 - Never stop to wait for an answer: use the default in `OPEN-QUESTIONS.md` (add a row if needed) and keep going.
+- **Never stop to wait for the backend either.** If a screen needs a route, field, permission or seed data the
+  backend doesn't have, build the screen with a sensible fallback, add a row to `BACKEND-NEEDS.md`, and keep going.
+  The whole list is handled in Phase 10.
+- **Test data:** keep `scripts/dev-data.ts`, a small script that signs in as the demo logins and creates realistic
+  data through the API (walk-ins and jobs in every status, bookings via the customer API, orders, quotations). Run
+  it after each `dev:memory` start. It only calls the API and never touches the backend's code.
 - **Git:** `git init` in Phase 1. Before the first commit, show `git config user.name` and `user.email` in the
   report: they must be the team's own, not another company's. Commit **locally** at the end of each phase
   (`feat(jobs): job card and next step`). **Never push.**

@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/Card";
 import { DetailRow } from "@/components/ui/DetailRow";
 import { Price } from "@/components/ui/Price";
 import { NotYet } from "@/features/jobs/components/NotYet";
+import { closedText } from "@/features/jobs/next-action";
 import type { JobCard } from "@/features/jobs/types";
 import { formatDateTime, formatKm, formatPrice } from "@/lib/format";
 
@@ -16,7 +17,7 @@ export function BillSection({ job, isDone }: { job: JobCard; isDone: boolean }) 
           {job.status === "ready"
             ? "Passed the quality check. Ready to bill."
             : job.status === "closed"
-              ? "Nothing to bill: the customer said no to the estimate."
+              ? `Nothing to bill. ${closedText(job)}.`
               : "The bill is made once the vehicle passes its quality check."}
         </NotYet>
       </Section>

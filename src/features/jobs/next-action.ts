@@ -28,7 +28,8 @@ export type NextAction =
   | { kind: "done"; text: string };
 
 /** What deciding the next step needs: a full job card or a row of the job list. */
-type JobForAction = Pick<JobCard, "status" | "technician" | "pickupDrop">;
+type JobForAction = Pick<JobCard, "status" | "technician" | "pickupDrop"> &
+  Partial<Pick<JobCard, "timeline">>;
 
 type StepRule = {
   label: string;
@@ -119,8 +120,14 @@ function currentStep(job: JobForAction): JobStep | { waiting: string } | { done:
     case "completed":
       return { done: "Handed over. Job completed" };
     case "closed":
-      return { done: "Closed. The customer said no to the estimate" };
+      return { done: closedText(job) };
   }
+}
+
+/** "Closed", with the reason the job card gives (estimate rejected, booking cancelled…) when it has one. */
+export function closedText(job: Partial<Pick<JobCard, "timeline">>): string {
+  const reason = job.timeline?.findLast((event) => event.status === "closed")?.note;
+  return reason ? `Closed: ${reason}` : "Closed";
 }
 
 /** The one next step on a job card for this user, or who has it (CLAUDE.md §5, §6). */

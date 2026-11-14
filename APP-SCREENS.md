@@ -150,6 +150,9 @@ More (G75) lists everything else this user may open.
 
 ## Phase 10: Real accounts and release
 
+**First:** the lead gives `BACKEND-NEEDS.md` to the backend agent. Once those are done, remove each screen's
+fallback, switch to the real route or field, retest, and mark the row Done.
+
 | Work | Needs |
 |---|---|
 | Development build (EAS) | The team's Expo account |

@@ -311,3 +311,21 @@ export type PartMatch = {
   mrpInPaise: number;
   gstRatePercent: number;
 };
+
+export type CollectPaymentRequest =
+  { method: "online"; reference: string } | { method: "cash"; cashReceivedInPaise: number };
+
+export type HandoverRequest = {
+  odometerKm: number;
+  checklist: { label: string; isDone: boolean }[];
+  /** Cash collected at the customer's door, when the bill wasn't paid before delivery. */
+  cashAtDoorInPaise?: number;
+  nextService?: { date?: string; odometerKm?: number };
+  /** The vehicle as it leaves, for the completion report. */
+  photos: string[];
+};
+
+/** A staff member who can drive, with how many trips they are on now. */
+export type DriverLoad = { id: string; name: string; activeTrips: number };
+
+export type TripKind = "pickup" | "drop";

@@ -1,4 +1,8 @@
+import { router } from "expo-router";
+import { View } from "react-native";
+
 import { Section } from "@/components/layout/Section";
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { DetailRow } from "@/components/ui/DetailRow";
 import { Price } from "@/components/ui/Price";
@@ -34,6 +38,22 @@ export function BillSection({ job, isDone }: { job: JobCard; isDone: boolean }) 
             ? `${formatPrice(payment.amountInPaise)} ${payment.method === "cash" ? "in cash" : "online"}, ${formatDateTime(payment.receivedAt)}`
             : "Not paid yet"}
         </DetailRow>
+        <View className="flex-row gap-2">
+          <Button
+            variant="outline"
+            label="Open bill"
+            className="flex-1"
+            fullWidth
+            onPress={() => router.push({ pathname: "/job/[id]/bill", params: { id: job.id } })}
+          />
+          <Button
+            variant="outline"
+            label="Report"
+            className="flex-1"
+            fullWidth
+            onPress={() => router.push({ pathname: "/job/[id]/report", params: { id: job.id } })}
+          />
+        </View>
         <DetailRow label="Handover">
           {handover
             ? `${formatDateTime(handover.at)} by ${handover.by.name} · ${formatKm(handover.odometerKm)}`

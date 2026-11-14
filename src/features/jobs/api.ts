@@ -1,6 +1,10 @@
 import type {
   ApprovalRequest,
   CheckInRequest,
+  CollectPaymentRequest,
+  DriverLoad,
+  HandoverRequest,
+  TripKind,
   EstimateLineInput,
   GarageService,
   InspectionRequest,
@@ -114,4 +118,28 @@ export async function getGarageServices(): Promise<GarageService[]> {
 export async function searchParts(q: string): Promise<PartMatch[]> {
   const page = await apiClient.get<Paginated<PartMatch>>("/catalog/products", { q, pageSize: 20 });
   return page.items;
+}
+
+/** Bills the approved work once the vehicle has passed its quality check. */
+export function createInvoice(id: string): Promise<JobCard> {
+  return apiClient.post<JobCard>(`${job(id)}/invoice`);
+}
+
+export function collectPayment(id: string, request: CollectPaymentRequest): Promise<JobCard> {
+  return apiClient.post<JobCard>(`${job(id)}/payment`, request);
+}
+
+/** Hands the vehicle back to the customer (at the counter, or by the driver at their door). */
+export function handOver(id: string, request: HandoverRequest): Promise<JobCard> {
+  return apiClient.post<JobCard>(`${job(id)}/handover`, request);
+}
+
+/** Everyone active at the branch: any staff member can drive a pick-up or a drop. */
+export function getBranchStaff(branchId: string): Promise<DriverLoad[]> {
+  return apiClient.get<DriverLoad[]>("/garage/staff", { branchId });
+}
+
+/** Sends a driver on the pick-up or the drop. */
+export function assignDriver(id: string, trip: TripKind, driverId: string): Promise<JobCard> {
+  return apiClient.put<JobCard>(`${job(id)}/trips/${trip}`, { driverId });
 }

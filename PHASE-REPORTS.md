@@ -155,3 +155,36 @@ booking to HSR Layout for the new-booking alert.
    - As `venkatesh@`: My jobs → a job to inspect → the six areas, then a job "New for you" → Accept → tick tasks → Done.
    - As `ravi@`: an estimate from an inspection (lines pre-filled); then Record customer's answer, rejecting one line.
    - As `mahesh@`: on an estimate, add a Part and use "Find a SpareX part".
+
+---
+
+## Phase 6: Finish and trips
+
+1. **Built**
+   - G42 Bill, `/job/[id]/bill`: the approved lines in the garage's name, branch address and GSTIN; subtotal excl.
+     GST, CGST and SGST (half each, as the website), total incl. GST; Create bill (billing) while the job is ready;
+     then Collect payment; Share PDF (expo-print + share sheet).
+   - G43 Collect payment, `/job/[id]/collect-payment` (form sheet): the amount due; online (reference), the
+     garage's UPI at the counter (reference) or cash (the change to give back) → Paid.
+   - G44 Handover, `/job/[id]/handover` (also the driver's "Delivered"): checklist, odometer out, photos, next
+     service (date or km, 3 months / 3,000 km suggested); cash at the door when a delivered bill isn't paid →
+     Completed. Kept as a draft until sent.
+   - G45 Completion report, `/job/[id]/report`: work done, parts replaced, before and after photos, technician,
+     QC, next service; Share PDF.
+   - G46 Trips, `/trips` tab: the driver's pick-ups and drops now, with call, maps and Picked up / Delivered.
+   - G47 Assign driver, `/job/[id]/assign-driver?trip=pickup|drop` (form sheet): branch staff with trips now.
+   - The job card's next step now leads to every step; its bill section opens the bill and the report.
+2. **Differs from the plan**
+   - "Online: send link": the backend has no way to send a payment link yet (BN-09); online payments are recorded
+     with their reference (a customer who pays in the SpareX app is marked paid by the backend).
+3. **API gaps:** BN-09 (send a payment link).
+4. **New libraries:** none (expo-print and expo-sharing were installed in Phase 1).
+5. **Check:** `tsc` clean (app and scripts); fresh Android and iOS bundles (`expo export`). 16 flow checks passed:
+   `shilpa@` bills, takes cash (short cash refused) and hands over at Whitefield; `mahesh@` takes a UPI payment;
+   the pick-up & drop booking goes from pick-up by `venkatesh@` through the whole job to delivery with cash at the
+   door (short cash refused). No phones.
+6. **Commit:** `feat(jobs): bill, payment, handover, report and trips` (the commit with this report).
+7. **Lead to look at**
+   - As `shilpa@`: Today → a Ready job → Create bill → Collect payment (cash, see the change) → Hand over.
+   - Share PDF on a bill and on a completion report (the share sheet should offer WhatsApp).
+   - As `venkatesh@`: Trips → Picked up; later, after billing, Delivered with cash at the door.

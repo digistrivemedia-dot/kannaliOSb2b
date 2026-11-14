@@ -8,7 +8,12 @@ import {
 
 import {
   addProgressNote,
+  assignDriver,
   assignTechnician,
+  collectPayment,
+  createInvoice,
+  getBranchStaff,
+  handOver,
   checkIn,
   createWalkIn,
   finishWork,
@@ -26,7 +31,7 @@ import {
   sendRevision,
   setLineDone,
 } from "@/features/jobs/api";
-import type { CheckInRequest, JobCard, JobCardFilters } from "@/features/jobs/types";
+import type { CheckInRequest, JobCard, JobCardFilters, TripKind } from "@/features/jobs/types";
 import { JOB_TABS, type JobTab } from "@/features/jobs/utils";
 import { LIVE_REFETCH_MS } from "@/lib/constants";
 import { nextPage } from "@/lib/paging";
@@ -189,5 +194,22 @@ export function usePartSearch(q: string) {
     queryKey: ["catalog", "part-search", q],
     queryFn: () => searchParts(q),
     enabled: q.length >= 2,
+  });
+}
+
+export const useCreateInvoice = (id: string) =>
+  useJobMutation(id, (jobId: string, _: void) => createInvoice(jobId));
+export const useCollectPayment = (id: string) => useJobMutation(id, collectPayment);
+export const useHandOver = (id: string) => useJobMutation(id, handOver);
+export const useAssignDriver = (id: string) =>
+  useJobMutation(id, (jobId: string, input: { trip: TripKind; driverId: string }) =>
+    assignDriver(jobId, input.trip, input.driverId),
+  );
+
+export function useBranchStaff(branchId: string, { enabled = true } = {}) {
+  return useQuery({
+    queryKey: ["jobs", "staff", branchId],
+    queryFn: () => getBranchStaff(branchId),
+    enabled,
   });
 }

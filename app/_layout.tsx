@@ -106,6 +106,14 @@ export default function RootLayout() {
                 options={{ ...sheet, sheetAllowedDetents: [0.7, 1] }}
               />
               <Stack.Screen name="part-search" options={{ ...sheet, sheetAllowedDetents: [0.9] }} />
+              <Stack.Screen name="job/[id]/bill" />
+              <Stack.Screen
+                name="job/[id]/collect-payment"
+                options={{ ...sheet, sheetAllowedDetents: [0.8, 1] }}
+              />
+              <Stack.Screen name="job/[id]/handover" />
+              <Stack.Screen name="job/[id]/report" />
+              <Stack.Screen name="job/[id]/assign-driver" options={sheet} />
               <Stack.Screen name="walk-in" />
               <Stack.Screen
                 name="jobs-filters"

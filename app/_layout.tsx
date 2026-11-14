@@ -15,6 +15,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { ToastHost } from "@/components/ui/Toast";
 import { UnreachableScreen } from "@/features/auth/screens/UnreachableScreen";
+import { WordmarkSplash } from "@/features/auth/screens/WordmarkSplash";
+import { useRegisterDraft } from "@/features/auth/register-draft-store";
 import { useAuth } from "@/features/auth/store";
 import { useBranchStore } from "@/features/company/branch-store";
 import { queryClient } from "@/lib/query-client";
@@ -31,10 +33,18 @@ const sheet = {
   contentStyle: { backgroundColor: colors.white },
 };
 
-/** True once the choices kept on the phone (the selected branch) are read back. */
+/** The stores kept on the phone, read back before the first screen shows. */
+const SAVED_STORES = [useBranchStore, useRegisterDraft];
+
 function useSavedChoicesLoaded() {
-  const [isLoaded, setIsLoaded] = useState(() => useBranchStore.persist.hasHydrated());
-  useEffect(() => useBranchStore.persist.onFinishHydration(() => setIsLoaded(true)), []);
+  const allLoaded = () => SAVED_STORES.every((store) => store.persist.hasHydrated());
+  const [isLoaded, setIsLoaded] = useState(allLoaded);
+  useEffect(() => {
+    const stops = SAVED_STORES.map((store) =>
+      store.persist.onFinishHydration(() => setIsLoaded(allLoaded())),
+    );
+    return () => stops.forEach((stop) => stop());
+  }, []);
   return isLoaded;
 }
 
@@ -53,13 +63,16 @@ export default function RootLayout() {
   }, []);
 
   // A font that fails to load falls back to the system font rather than blocking the app.
-  const isReady = (fontsLoaded || fontError !== null) && status !== "restoring" && savedChoicesLoaded;
+  const fontsReady = fontsLoaded || fontError !== null;
+  const isReady = fontsReady && status !== "restoring" && savedChoicesLoaded;
 
+  // The native splash gives way to the wordmark (G01) as soon as the fonts are in.
   useEffect(() => {
-    if (isReady) void SplashScreen.hideAsync();
-  }, [isReady]);
+    if (fontsReady) void SplashScreen.hideAsync();
+  }, [fontsReady]);
 
-  if (!isReady) return null;
+  if (!fontsReady) return null;
+  if (!isReady) return <WordmarkSplash />;
 
   const isSignedIn = status === "signed_in";
   return (
@@ -81,6 +94,7 @@ export default function RootLayout() {
               <Stack.Screen name="job/[id]" />
               <Stack.Screen name="coming-soon" />
               <Stack.Screen name="sheets/select" options={sheet} />
+              <Stack.Screen name="branch-switcher" options={sheet} />
               <Stack.Screen name="dev/kit" />
             </Stack.Protected>
             <Stack.Protected guard={!isSignedIn}>

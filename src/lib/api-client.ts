@@ -8,6 +8,8 @@ type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   query?: Record<string, QueryValue>;
   body?: unknown;
+  /** Extra headers, such as an application's access key. */
+  headers?: Record<string, string>;
 };
 
 /** The error body every endpoint returns. Field messages are keyed by field name. */
@@ -55,7 +57,7 @@ const NO_CONNECTION = new ApiError(
 );
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { method = "GET", query, body } = options;
+  const { method = "GET", query, body, headers } = options;
   // Outside development the API must be HTTPS (CLAUDE.md §10).
   if (!__DEV__ && !apiBaseUrl.startsWith("https://")) {
     throw new ApiError(0, "insecure-url", "The app isn't set up to reach Kannali Garage.");
@@ -73,6 +75,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
         Accept: "application/json",
         ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers,
       },
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
@@ -104,10 +107,14 @@ function safeParse(text: string): unknown {
   }
 }
 
+type Headers = Record<string, string>;
+
 export const apiClient = {
-  get: <T>(path: string, query?: Record<string, QueryValue>) => request<T>(path, { query }),
+  get: <T>(path: string, query?: Record<string, QueryValue>, headers?: Headers) =>
+    request<T>(path, { query, headers }),
   post: <T>(path: string, body?: unknown) => request<T>(path, { method: "POST", body }),
-  put: <T>(path: string, body?: unknown) => request<T>(path, { method: "PUT", body }),
+  put: <T>(path: string, body?: unknown, headers?: Headers) =>
+    request<T>(path, { method: "PUT", body, headers }),
   patch: <T>(path: string, body?: unknown) => request<T>(path, { method: "PATCH", body }),
   delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 };

@@ -30,7 +30,7 @@ export function TopBar({ title, subtitle }: TopBarProps) {
       <View className="h-14 flex-row items-center justify-between">
         <Pressable
           disabled={!canSwitch}
-          onPress={() => router.push(plannedHref("G07"))}
+          onPress={() => router.push("/branch-switcher")}
           accessibilityRole={canSwitch ? "button" : "text"}
           accessibilityLabel={canSwitch ? `Branch: ${place}. Switch branch` : place}
           className="-ml-2 min-h-12 max-w-[75%] flex-row items-center gap-1.5 rounded-button px-2 active:bg-navy-800"

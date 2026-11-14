@@ -1,4 +1,4 @@
-import type { Business } from "@/features/company/types";
+import type { Address, Business } from "@/features/company/types";
 
 // Copied from spareXB2B/src/features/auth/types.ts; the API returns exactly these shapes.
 
@@ -53,3 +53,39 @@ export type SignInResult =
       applicationRef?: string;
     }
   | TwoFactorChallenge;
+
+/** A business applying for an account. Kannali staff verify it in the admin panel. */
+export type RegistrationApplication = {
+  business: Pick<Business, "name" | "type"> & {
+    gstin?: string;
+    pan?: string;
+    licenceNumber?: string;
+    /** e.g. a Udyam (MSME) number. */
+    otherRegistration?: string;
+  };
+  /** The contact person, when it isn't the person applying. */
+  contact: { name?: string; email: string; phone: string };
+  address: Address;
+  /** Shop or workshop photos (at least one): data URLs, or links to photos already sent. */
+  photos: string[];
+  /** Photos of licences or registration certificates. */
+  documents: string[];
+};
+
+export type RegistrationReceipt = {
+  referenceNumber: string;
+  submittedAt: string;
+  /** Needed with the reference to look the application up (shown once; Kannali can't recover it). */
+  accessKey: string;
+};
+
+/** Where an application stands, as the applicant sees it. */
+export type ApplicationStatus = Omit<RegistrationReceipt, "accessKey"> & {
+  status: ApprovalStatus;
+  application: RegistrationApplication;
+  reviewedAt?: string;
+  /** What Kannali needs changed, when it is sent back. */
+  reviewNotes?: string[];
+  /** Why it was turned down, when rejected. */
+  rejectionReason?: string;
+};

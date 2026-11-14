@@ -43,3 +43,11 @@ export type Branch = {
 
 /** The minimal branch reference embedded in bookings and job cards. */
 export type BranchRef = Pick<Branch, "id" | "name">;
+
+/** What a PIN code lookup returns, used to fill in city and state. */
+export type PincodeDetails = {
+  pin: string;
+  city: string;
+  district?: string;
+  state: string;
+};

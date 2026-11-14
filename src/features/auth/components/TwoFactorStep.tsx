@@ -7,11 +7,13 @@ import { Screen } from "@/components/layout/Screen";
 import { Button } from "@/components/ui/Button";
 import { FormAlert } from "@/components/ui/FormAlert";
 import { NumberInput } from "@/components/ui/NumberInput";
+import { showToast } from "@/components/ui/Toast";
 import * as authApi from "@/features/auth/api";
 import { AuthHeader } from "@/features/auth/components/AuthHeader";
 import { twoFactorSchema, type TwoFactorValues } from "@/features/auth/schemas";
 import { useAuth } from "@/features/auth/store";
 import type { TwoFactorChallenge } from "@/features/auth/types";
+import { errorMessage } from "@/lib/api-client";
 import { applyApiErrors } from "@/lib/form-errors";
 
 type TwoFactorStepProps = {
@@ -28,6 +30,19 @@ export function TwoFactorStep({ challenge, onBack }: TwoFactorStepProps) {
     resolver: zodResolver(twoFactorSchema),
     defaultValues: { code: "" },
   });
+
+  const [isResending, setIsResending] = useState(false);
+  const resend = async () => {
+    setIsResending(true);
+    try {
+      await authApi.resendTwoFactorCode(challenge.challengeId);
+      showToast({ message: `New code sent to ${challenge.maskedPhone}` });
+    } catch (error) {
+      showToast({ message: errorMessage(error), tone: "danger" });
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   const verify = handleSubmit(async ({ code }) => {
     setFormError(null);
@@ -55,6 +70,7 @@ export function TwoFactorStep({ challenge, onBack }: TwoFactorStepProps) {
       }
     >
       {formError ? <FormAlert message={formError} /> : null}
+      <Button variant="ghost" label="Send a new code" onPress={() => void resend()} loading={isResending} />
       <Controller
         control={control}
         name="code"

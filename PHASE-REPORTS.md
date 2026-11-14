@@ -40,7 +40,7 @@ booking to HSR Layout for the new-booking alert.
    backend: `ravi@` (manager), `mahesh@` (owner, 2-step code), `venkatesh@` (reset link), `deepa@` (invited, can't
    sign in yet), applications `APP-2026-0009/10/11` with key `demo-application-key`, and a new application.
    No phones (see above).
-6. **Commit:** see `git log` (`feat(auth): sign in, passwords, apply and application status`).
+6. **Commit:** `4528e01 feat(auth): sign in, passwords, apply and application status`.
 7. **Lead to look at**
    - Sign in as `mahesh@`: the 2-step step, then tap the branch name on Today to switch branch.
    - Apply from the sign-in screen, close the app on step 3, reopen: the draft is still there.

@@ -1,3 +1,5 @@
+import { onSignOut } from "@/features/auth/store";
+
 /**
  * Which new bookings have already opened the alert in this run of the app, and whether it is open now,
  * so each booking alerts once and alerts never stack. Kept in memory: after a restart, a booking still
@@ -16,3 +18,8 @@ export const bookingAlert = {
     isOpen = false;
   },
 };
+
+onSignOut(() => {
+  alerted.clear();
+  isOpen = false;
+});

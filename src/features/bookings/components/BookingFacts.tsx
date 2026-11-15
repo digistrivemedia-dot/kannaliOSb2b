@@ -2,7 +2,6 @@ import { router } from "expo-router";
 import { History, MapPinned, Phone } from "lucide-react-native";
 import { View } from "react-native";
 
-import { plannedHref } from "@/components/layout/ComingSoon";
 import { Section } from "@/components/layout/Section";
 import { Card } from "@/components/ui/Card";
 import { IconButton } from "@/components/ui/IconButton";
@@ -39,7 +38,12 @@ export function BookingFacts({ booking }: { booking: Booking }) {
             icon={History}
             title="Vehicle history"
             subtitle="Earlier services, here and at other garages"
-            onPress={() => router.push(plannedHref("G83"))}
+            onPress={() =>
+              router.push({
+                pathname: "/vehicle/[plate]",
+                params: { plate: booking.vehicle.plate.replace(/\s/g, "") },
+              })
+            }
             divided
           />
         </Card>
@@ -60,7 +64,7 @@ export function BookingFacts({ booking }: { booking: Booking }) {
           {booking.notes ? (
             <View className="gap-1 rounded-input bg-gray-50 p-3">
               <Text variant="label" tone="muted" sectionLabel>
-                Customer's note
+                Customer’s note
               </Text>
               <Text>{booking.notes}</Text>
             </View>

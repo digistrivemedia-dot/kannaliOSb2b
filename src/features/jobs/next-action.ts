@@ -19,7 +19,7 @@ export type JobStep =
   | "record_delivery"
   | "handover";
 
-export type NextAction =
+type NextAction =
   /** This user takes the next step. */
   | { kind: "do"; step: JobStep; label: string }
   /** Someone else does, or the job waits for the customer: says who. */

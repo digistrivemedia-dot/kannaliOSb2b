@@ -44,13 +44,3 @@ export function paymentText(payment: OrderPayment): string {
   if (payment.method === "razorpay") return "Online payment not finished";
   return "Pay on delivery";
 }
-
-export const ORDER_STATUS_ORDER: OrderStatus[] = [
-  "placed",
-  "confirmed",
-  "processing",
-  "packed",
-  "shipped",
-  "out_for_delivery",
-  "delivered",
-];

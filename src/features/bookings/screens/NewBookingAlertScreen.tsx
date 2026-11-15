@@ -67,7 +67,7 @@ export function NewBookingAlertScreen() {
           {query.isPending ? (
             <Skeleton className="h-40 w-40" />
           ) : (
-            <Text tone="inverse">This booking can't be opened.</Text>
+            <Text tone="inverse">This booking can’t be opened.</Text>
           )}
         </View>
       ) : !isOpen ? (

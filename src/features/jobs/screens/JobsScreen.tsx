@@ -1,7 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 import { router, useLocalSearchParams } from "expo-router";
 import { ClipboardList, SlidersHorizontal } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RefreshControl, View } from "react-native";
 
 import { Screen } from "@/components/layout/Screen";
@@ -41,10 +41,12 @@ export function JobsScreen() {
   const q = useDebounced(search.trim());
   const { technicianId, dateRange } = useJobFilters();
 
-  // Today's tiles open this tab with their own chip chosen.
-  useEffect(() => {
+  // Today's tiles open this tab with their own chip chosen (adjusted during render, not in an effect).
+  const [seenTab, setSeenTab] = useState(params.tab);
+  if (params.tab !== seenTab) {
+    setSeenTab(params.tab);
     if (isJobTab(params.tab)) setTab(params.tab);
-  }, [params.tab]);
+  }
 
   const isFinished = tab === "completed" || tab === "closed";
   const extra = {

@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 import { haptic } from "@/lib/haptics";
 import { toneColors, type Tone } from "@/lib/theme";
 
-export type SegmentOption<T extends string> = { value: T; label: string; tone: Tone };
+type SegmentOption<T extends string> = { value: T; label: string; tone: Tone };
 
 type SegmentedChoiceProps<T extends string> = {
   /** Read out with the choices, e.g. "Front brake". */

@@ -7,10 +7,12 @@ import { Input } from "@/components/ui/Input";
 import { PhotoCapture } from "@/components/ui/PhotoCapture";
 import { showToast } from "@/components/ui/Toast";
 import { useAddProgressNote } from "@/features/jobs/queries";
+import { progressNoteSchema } from "@/features/jobs/schemas";
 import { MAX_JOB_PHOTO_BYTES } from "@/features/jobs/utils";
 import { errorMessage } from "@/lib/api-client";
 import { clearDraft, useDraftStore } from "@/lib/drafts";
 import { toDataUrls } from "@/lib/photos";
+import { firstProblem } from "@/lib/validation";
 
 type Draft = { text: string; photos: string[] };
 
@@ -34,9 +36,9 @@ export function ProgressNoteForm({ jobId, isExtraWork = false, onSent }: Progres
   const [error, setError] = useState<string | null>(null);
 
   const send = async () => {
-    if (draft.text.trim().length < 2)
-      return setError(isExtraWork ? "Say what you found." : "Write a short note.");
-    setError(null);
+    const problem = firstProblem(progressNoteSchema(isExtraWork), draft);
+    setError(problem);
+    if (problem) return;
     setIsPreparing(true);
     try {
       await add.mutateAsync({

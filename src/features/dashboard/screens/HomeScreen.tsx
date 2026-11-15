@@ -1,21 +1,21 @@
 import { router } from "expo-router";
 import { CircleAlert, FilePlus2, FileText, ListOrdered, ShoppingBag } from "lucide-react-native";
-import { View } from "react-native";
 
 import { Screen } from "@/components/layout/Screen";
 import { Section } from "@/components/layout/Section";
 import { TopBar } from "@/components/layout/TopBar";
 import { Card } from "@/components/ui/Card";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { ListRow } from "@/components/ui/ListRow";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { Text } from "@/components/ui/Text";
 import { useSession } from "@/features/auth/store";
 import { useCan } from "@/features/auth/use-can";
 import { useCreditSummary } from "@/features/credit/queries";
-import { OrderCard } from "@/features/orders/components/OrderCard";
-import { useOrders } from "@/features/orders/queries";
-import { useReorder } from "@/features/orders/use-reorder";
-import { useQuotations } from "@/features/quotations/queries";
 import { greeting } from "@/features/dashboard/utils";
+import { RecentOrders } from "@/features/orders/components/RecentOrders";
+import { useRefetchOrders } from "@/features/orders/queries";
+import { useQuotations } from "@/features/quotations/queries";
 import { formatCount, formatPrice } from "@/lib/format";
 
 /**
@@ -27,8 +27,7 @@ export function HomeScreen() {
   const canSeeCredit = useCan("credit:view");
   const quoted = useQuotations({ status: "quoted", pageSize: 5 });
   const credit = useCreditSummary({ enabled: business.creditEnabled && canSeeCredit });
-  const recent = useOrders({ sort: "placedAt", order: "desc", pageSize: 3 });
-  const { reorder, reorderingId } = useReorder();
+  const refetchOrders = useRefetchOrders();
   const overdue = credit.data && credit.data.overdueInvoiceCount > 0 ? credit.data : null;
   const toAnswer = quoted.data?.total ?? 0;
 
@@ -36,10 +35,18 @@ export function HomeScreen() {
     <Screen
       inTabs
       header={<TopBar title={greeting(user.name, new Date())} subtitle={business.name} />}
-      onRefresh={() => Promise.all([quoted.refetch(), recent.refetch(), credit.refetch()])}
+      onRefresh={() => Promise.all([quoted.refetch(), refetchOrders(), credit.refetch()])}
     >
       <Section title="Needs you now">
-        {overdue || toAnswer ? (
+        {quoted.isPending || (credit.isPending && credit.fetchStatus !== "idle") ? (
+          <Skeleton shape="card" className="h-20 w-full" />
+        ) : quoted.isError || credit.isError ? (
+          <ErrorState
+            error={quoted.error ?? credit.error}
+            onRetry={() => void Promise.all([quoted.refetch(), credit.refetch()])}
+            what="what needs you"
+          />
+        ) : overdue || toAnswer ? (
           <Card flush>
             {overdue ? (
               <ListRow
@@ -86,27 +93,7 @@ export function HomeScreen() {
           divided
         />
       </Card>
-      <Section
-        title="Recent orders"
-        action={{ label: "All orders", onPress: () => router.push("/orders") }}
-      >
-        {recent.data?.items.length ? (
-          <View className="gap-3">
-            {recent.data.items.map((order) => (
-              <OrderCard
-                key={order.id}
-                order={order}
-                onReorder={() => void reorder(order.id)}
-                isReordering={reorderingId === order.id}
-              />
-            ))}
-          </View>
-        ) : (
-          <Text tone="muted">
-            {recent.isPending ? "Loading…" : "Your orders show here, ready to order again."}
-          </Text>
-        )}
-      </Section>
+      <RecentOrders />
     </Screen>
   );
 }

@@ -17,10 +17,12 @@ import { MoneyTotals } from "@/features/jobs/components/MoneyTotals";
 import { StepNotReady } from "@/features/jobs/components/StepNotReady";
 import { WithJob } from "@/features/jobs/components/WithJob";
 import { useRecordApproval } from "@/features/jobs/queries";
+import { approvalSchema } from "@/features/jobs/schemas";
 import type { EstimateLine, JobCard } from "@/features/jobs/types";
 import { approvedLines, ESTIMATE_KIND_LABELS, sumLines } from "@/features/jobs/utils";
 import { errorMessage } from "@/lib/api-client";
 import { formatNumber, formatPrice } from "@/lib/format";
+import { firstProblem } from "@/lib/validation";
 
 /** How the customer answered (website `ApprovalForm`). */
 const CHANNELS = ["In person", "By phone", "On WhatsApp", "In the SpareX app"] as const;
@@ -53,7 +55,6 @@ function ApprovalForm({ job, lines }: { job: JobCard; lines: EstimateLine[] }) {
   const [error, setError] = useState<string | null>(null);
   const record = useRecordApproval(job.id);
   const approved = pending.filter((line) => decisions[line.id] === "approved");
-  const allAnswered = pending.every((line) => decisions[line.id]);
   const isFirstEstimate = !lines.some((line) => line.approval === "approved");
   const decideAll = (decision: Decision) =>
     setDecisions(Object.fromEntries(pending.map((line) => [line.id, decision])));
@@ -77,11 +78,12 @@ function ApprovalForm({ job, lines }: { job: JobCard; lines: EstimateLine[] }) {
     );
 
   const save = () => {
-    if (!allAnswered) {
-      setError("Mark an answer for every line.");
-      return;
-    }
-    setError(null);
+    const problem = firstProblem(approvalSchema(pending.map((line) => line.id)), {
+      decisions,
+      note: channel,
+    });
+    setError(problem);
+    if (problem) return;
     // Rejecting the whole first estimate closes the job, which can't be undone.
     if (approved.length === 0 && isFirstEstimate) {
       Alert.alert(

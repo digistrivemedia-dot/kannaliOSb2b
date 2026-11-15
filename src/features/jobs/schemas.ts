@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import { isValidPlate } from "@/lib/format";
+import { parseTypedDate } from "@/lib/dates";
+import { formatPrice, isValidPlate } from "@/lib/format";
 import { mobileField, requiredText } from "@/lib/validation";
 
 // The rules and messages follow spareXB2B/src/features/job-cards/schemas.ts.
@@ -74,3 +75,85 @@ export const checkInSchema = z.object({
 });
 
 export type CheckInValues = z.infer<typeof checkInSchema>;
+
+// The forms below keep their values in plain state (they save drafts as they go); these schemas hold
+// their rules, checked with `firstProblem` before sending.
+
+/** A progress note, or extra work the technician found. */
+export function progressNoteSchema(isExtraWork: boolean) {
+  return z.object({
+    text: z
+      .string()
+      .trim()
+      .min(2, isExtraWork ? "Say what you found." : "Write a short note."),
+  });
+}
+
+/** The customer's answer: every line waiting on them needs one. */
+export function approvalSchema(pendingLineIds: string[]) {
+  return z.object({
+    decisions: z
+      .record(z.string(), z.enum(["approved", "rejected"]))
+      .refine(
+        (decisions) => pendingLineIds.every((id) => decisions[id]),
+        "Mark an answer for every line.",
+      ),
+    note: z.string().min(1),
+  });
+}
+
+/** Quality check: passing needs every check ticked; sending back needs a note. */
+export const qualityCheckSchema = z.discriminatedUnion("result", [
+  z.object({
+    result: z.literal("pass"),
+    items: z
+      .array(z.object({ label: z.string(), isOk: z.boolean() }))
+      .refine(
+        (items) => items.every((item) => item.isOk),
+        "Tick every check before passing the vehicle.",
+      ),
+  }),
+  z.object({
+    result: z.literal("rework"),
+    note: z.string().trim().min(3, "Say what needs redoing."),
+  }),
+]);
+
+/** Collecting the bill: cash covers it, or an online payment has its reference. */
+export function collectPaymentSchema(dueInPaise: number) {
+  return z.discriminatedUnion("way", [
+    z.object({
+      way: z.literal("cash"),
+      cashInPaise: z.number().min(dueInPaise, "That's less than the bill."),
+    }),
+    z.object({
+      way: z.enum(["online", "counter_upi"]),
+      reference: z
+        .string()
+        .trim()
+        .min(6, "Enter the UPI or payment reference from the customer's phone."),
+    }),
+  ]);
+}
+
+/** Handover: the checklist, the odometer, a real next-service date, and cash due at the door. */
+export function handoverSchema(cashDueInPaise: number | undefined) {
+  return z.object({
+    checklist: z
+      .array(z.boolean())
+      .refine((items) => items.every(Boolean), "Tick every item before handing the vehicle over."),
+    odometer: z.string().regex(/^\d{1,7}$/, "Enter the odometer reading as it leaves."),
+    nextDate: z
+      .string()
+      .refine(
+        (value) => !value || parseTypedDate(value) !== null,
+        "Enter the next service date as DD/MM/YYYY, or leave it empty.",
+      ),
+    cashInPaise: z
+      .number()
+      .refine(
+        (cash) => cashDueInPaise === undefined || cash >= cashDueInPaise,
+        `Collect ${formatPrice(cashDueInPaise ?? 0)} in cash first.`,
+      ),
+  });
+}

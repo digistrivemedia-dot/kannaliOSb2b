@@ -36,7 +36,7 @@ export const estimateSchema = z.object({
 });
 
 export type EstimateValues = z.infer<typeof estimateSchema>;
-export type EstimateLineValues = EstimateValues["lines"][number];
+type EstimateLineValues = EstimateValues["lines"][number];
 
 /** An empty line of a kind; line ids must be letters, digits, "-" or "_" (the API's rule). */
 export function newEstimateLine(kind: EstimateLineKind = "labour"): EstimateLineValues {

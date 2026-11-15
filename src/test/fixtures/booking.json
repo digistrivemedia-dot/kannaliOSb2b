@@ -1,0 +1,33 @@
+{
+  "id": "bkg_f8231d657bc984fca24b",
+  "number": "BK-2026-0013",
+  "status": "new",
+  "branch": {
+    "id": "br-hsr",
+    "name": "HSR Layout"
+  },
+  "createdAt": "2026-11-14T19:15:08.735Z",
+  "respondBy": "2026-11-14T19:17:08.731Z",
+  "slotAt": "2026-11-16T09:30:00.000Z",
+  "customer": {
+    "name": "Sneha Kumar",
+    "phone": "+919410368034",
+    "customerId": "cus_e366aced5522c48a734f"
+  },
+  "vehicle": {
+    "id": "veh_0a70b5e0a036731b1502",
+    "plate": "KA34RB7851",
+    "type": "scooter",
+    "make": "Honda",
+    "model": "Activa 6G DLX",
+    "vehicleId": "veh_0a70b5e0a036731b1502"
+  },
+  "services": [
+    {
+      "serviceId": "pkg-activa-6g-periodic",
+      "name": "Periodic service",
+      "priceInPaise": 84661
+    }
+  ],
+  "notes": "Please check the brakes too"
+}

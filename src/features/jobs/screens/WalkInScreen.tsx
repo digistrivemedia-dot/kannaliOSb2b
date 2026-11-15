@@ -183,7 +183,7 @@ export function WalkInScreen() {
                 {found.customer.name} · {formatPhone(found.customer.phone)}
               </Text>
               <Text variant="small" tone="success" weight="medium">
-                On file. Check it's the same vehicle, then open the job card.
+                On file. Check it’s the same vehicle, then open the job card.
               </Text>
             </View>
           ) : (

@@ -10,7 +10,7 @@ import {
 import type { QuotationStatus } from "@/features/quotations/types";
 import { nextPage } from "@/lib/paging";
 
-export const quotationKeys = {
+const quotationKeys = {
   all: ["quotations"] as const,
   detail: (id: string) => ["quotations", "detail", id] as const,
 };

@@ -42,15 +42,17 @@ export function RegisterScreen() {
   const [draft] = useState(() => useRegisterDraft.getState());
   const [step, setStep] = useState(draft.step);
   const [formError, setFormError] = useState<string | null>(null);
-  const { control, handleSubmit, setError, setValue, trigger, watch, getValues, formState } =
+  const { control, handleSubmit, setError, setValue, trigger, subscribe, getValues, formState } =
     useForm<RegisterValues>({ resolver: zodResolver(registerSchema), defaultValues: draft.values });
 
-  useEffect(() => {
-    const subscription = watch((values) =>
-      useRegisterDraft.getState().save(values as RegisterValues, step),
-    );
-    return () => subscription.unsubscribe();
-  }, [watch, step]);
+  useEffect(
+    () =>
+      subscribe({
+        formState: { values: true },
+        callback: ({ values }) => useRegisterDraft.getState().save(values, step),
+      }),
+    [subscribe, step],
+  );
 
   const goTo = (next: number) => {
     setStep(next);
@@ -136,7 +138,7 @@ export function RegisterScreen() {
             />
           </>
         )}
-        {step === 3 && <ReviewStep control={control} values={watch()} onEdit={goTo} />}
+        {step === 3 && <ReviewStep control={control} values={getValues()} onEdit={goTo} />}
       </View>
     </Screen>
   );

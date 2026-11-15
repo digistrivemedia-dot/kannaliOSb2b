@@ -272,17 +272,21 @@ type Desk = {
   billing: string | null;
 };
 
-async function walkIn(desk: Desk, target: Stage) {
-  const vehicle = pick(VEHICLES);
+/** A walk-in moved to `target`; `vehicleId` brings in a vehicle already on file (a customer-app user's). */
+async function walkIn(desk: Desk, target: Stage, vehicleId?: string): Promise<string> {
   const job = await api<Json>("b2b", "/garage/jobs", {
     token: desk.manager,
     body: {
       branchId: desk.branchId,
-      newVehicle: {
-        plate: plate(),
-        ...vehicle,
-        customer: { name: person(), phone: `+91${mobile()}` },
-      },
+      ...(vehicleId
+        ? { vehicleId }
+        : {
+            newVehicle: {
+              plate: plate(),
+              ...pick(VEHICLES),
+              customer: { name: person(), phone: `+91${mobile()}` },
+            },
+          }),
       complaints: [pick(COMPLAINTS)],
     },
   });
@@ -323,7 +327,8 @@ async function walkIn(desk: Desk, target: Stage) {
       decisions: Object.fromEntries(LINES.map((line) => [line.id, "rejected"])),
       note: "By phone: will get it done later",
     });
-    return say(`  walk-in ${job.number}: closed (estimate rejected)`);
+    say(`  walk-in ${job.number}: closed (estimate rejected)`);
+    return id;
   }
   if (reach("approved")) {
     await at("/estimate/approval", desk.manager, {
@@ -363,7 +368,8 @@ async function walkIn(desk: Desk, target: Stage) {
         },
       ],
     });
-    return say(`  walk-in ${job.number}: extra work found, waiting for the customer again`);
+    say(`  walk-in ${job.number}: extra work found, waiting for the customer again`);
+    return id;
   }
   if (reach("quality_check")) {
     for (const line of ["l2", "l3", "l5"])
@@ -379,7 +385,8 @@ async function walkIn(desk: Desk, target: Stage) {
       ],
       note: "Front brake still soft, bleed it again",
     });
-    return say(`  walk-in ${job.number}: sent back after QC (in progress)`);
+    say(`  walk-in ${job.number}: sent back after QC (in progress)`);
+    return id;
   }
   if (reach("ready")) {
     await at("/quality-check", desk.manager, {
@@ -393,8 +400,10 @@ async function walkIn(desk: Desk, target: Stage) {
     });
   }
   if (reach("payment_pending")) {
-    if (!desk.billing)
-      return say(`  walk-in ${job.number}: ready (billing needs the owner, skipped)`);
+    if (!desk.billing) {
+      say(`  walk-in ${job.number}: ready (billing needs the owner, skipped)`);
+      return id;
+    }
     await at("/invoice", desk.billing, {});
   }
   if (reach("paid") && desk.billing)
@@ -411,11 +420,18 @@ async function walkIn(desk: Desk, target: Stage) {
     });
   }
   say(`  walk-in ${job.number}: ${target.replace(/_/g, " ")}`);
+  return id;
 }
 
 // ---------------------------------------------------------------- bookings (customer app)
 
-type Customer = { token: string; vehicleId: string; addressId: string; name: string };
+type Customer = {
+  token: string;
+  vehicleId: string;
+  addressId: string;
+  name: string;
+  plate: string;
+};
 
 async function customer(): Promise<Customer> {
   const phone = mobile();
@@ -425,6 +441,7 @@ async function customer(): Promise<Customer> {
     body: { mobile: phone, otp: otp.demoCode, name },
   });
   const token = String(verified.token);
+  const registrationNumber = plate();
   const catalog = await api<{
     models: { id: string; name: string; type: string; variants: { id: string }[] }[];
   }>("b2c", "/vehicles/catalog");
@@ -437,7 +454,7 @@ async function customer(): Promise<Customer> {
       modelId: model.id,
       variantId: model.variants[0]?.id,
       year: 2022,
-      registrationNumber: plate(),
+      registrationNumber,
       odometerKm: 9000 + Math.floor(Math.random() * 20000),
     },
   });
@@ -455,7 +472,13 @@ async function customer(): Promise<Customer> {
       isDefault: true,
     },
   });
-  return { token, vehicleId: String(vehicle.id), addressId: String(address.id), name };
+  return {
+    token,
+    vehicleId: String(vehicle.id),
+    addressId: String(address.id),
+    name,
+    plate: registrationNumber,
+  };
 }
 
 const todayInIndia = (days = 0) =>
@@ -546,6 +569,29 @@ async function oneNewBooking() {
     pickup: Math.random() > 0.5,
   });
   say(`New booking from ${name} for ${date} sent to HSR Layout. It waits 2 minutes for an answer.`);
+}
+
+const REVIEWS = [
+  { rating: 5, comment: "Quick service and they explained every line of the bill." },
+  { rating: 4, comment: "Good work. Took a little longer than promised." },
+  { rating: 5, comment: "" },
+  { rating: 3, comment: "Brakes are fine now, but the bike came back dusty." },
+];
+
+/** Customer-app users bring their vehicles in, the jobs are completed, and they rate the visit. */
+async function reviews(desk: Desk) {
+  for (const review of REVIEWS) {
+    const person = await customer();
+    const known = await api<{ vehicle: { id: string } } | null>(
+      "b2b",
+      `/garage/vehicles/lookup?plate=${encodeURIComponent(person.plate)}`,
+      { token: desk.manager },
+    );
+    if (!known) throw new ApiFailure(`Plate ${person.plate} isn't on file`);
+    const jobId = await walkIn(desk, "completed", known.vehicle.id);
+    await api("b2c", `/me/service-jobs/${jobId}/review`, { token: person.token, body: review });
+    say(`  ${person.name} rated the visit ${review.rating} of 5`);
+  }
 }
 
 // ---------------------------------------------------------------- buying
@@ -759,6 +805,11 @@ async function main() {
     ] as Stage[]) {
       await step(`Whitefield walk-in (${target})`, () => walkIn(whitefield, target));
     }
+  }
+
+  if (owner) {
+    say("Reviews from customer-app users (HSR Layout):");
+    await step("reviews", () => reviews(hsr));
   }
 
   say("Buying (Venkatesh, spares):");

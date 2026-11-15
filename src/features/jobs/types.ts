@@ -48,7 +48,7 @@ export type PickupDrop = PickupDropRequest & {
 
 export type FuelLevel = "empty" | "quarter" | "half" | "three_quarters" | "full";
 
-export type DamageNote = {
+type DamageNote = {
   id: string;
   /** Where on the vehicle, e.g. "Left side panel". */
   area: string;

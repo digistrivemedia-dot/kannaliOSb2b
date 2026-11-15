@@ -34,3 +34,12 @@ export const panField = z
 export function requiredText(message: string) {
   return z.string().trim().min(1, message);
 }
+
+/**
+ * For forms kept in plain state rather than react-hook-form: the first message the schema gives,
+ * or null when the values are fine.
+ */
+export function firstProblem(schema: z.ZodType, values: unknown): string | null {
+  const result = schema.safeParse(values);
+  return result.success ? null : (result.error.issues[0]?.message ?? "Check the details.");
+}

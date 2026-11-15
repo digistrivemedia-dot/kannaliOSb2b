@@ -4,7 +4,7 @@ import { calculateGst } from "@/lib/gst";
 // same numbers before it is placed.
 
 /** Any priced line: cart rows, order lines, quotation lines. Prices exclude GST. */
-export type PricedLine = {
+type PricedLine = {
   quantity: number;
   unitPriceInPaise: number;
   /** The price the saving is measured against: the B2C price, or the business price for a quote. */

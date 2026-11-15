@@ -169,7 +169,17 @@ export default function RootLayout() {
               <Stack.Screen name="person/[id]" />
               <Stack.Screen name="branches" />
               <Stack.Screen name="garage-profile" />
-              <Stack.Screen name="coming-soon" />
+              <Stack.Screen name="customers" />
+              <Stack.Screen name="customer/[id]" />
+              <Stack.Screen name="vehicle/[plate]" />
+              <Stack.Screen name="reviews" />
+              <Stack.Screen name="reports" />
+              <Stack.Screen
+                name="reports-filters"
+                options={{ ...sheet, sheetAllowedDetents: [0.9] }}
+              />
+              <Stack.Screen name="notifications" />
+              <Stack.Screen name="account" />
               <Stack.Screen name="sheets/select" options={sheet} />
               <Stack.Screen name="branch-switcher" options={sheet} />
               <Stack.Screen name="dev/kit" />

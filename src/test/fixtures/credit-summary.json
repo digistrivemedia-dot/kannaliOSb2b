@@ -1,0 +1,12 @@
+{
+  "limitInPaise": 2500000,
+  "usedInPaise": 2452124,
+  "availableInPaise": 47876,
+  "overdueInPaise": 0,
+  "overdueInvoiceCount": 0,
+  "termsDays": 15,
+  "nextDue": {
+    "date": "2026-11-30",
+    "amountInPaise": 71640
+  }
+}

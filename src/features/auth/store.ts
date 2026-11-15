@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRef } from "react";
+import { useState } from "react";
 import { create } from "zustand";
 
 import * as authApi from "@/features/auth/api";
@@ -78,8 +78,10 @@ setUnauthorizedHandler(() => void useAuth.getState().signOut({ local: true }));
  */
 export function useSession(): Session {
   const session = useAuth((state) => state.session);
-  const last = useRef(session);
-  if (session) last.current = session;
-  if (!last.current) throw new Error("useSession is used outside the signed-in screens.");
-  return last.current;
+  const [last, setLast] = useState(session);
+  // Remembered during render (React's "information from previous renders" pattern), not in a ref.
+  if (session && session !== last) setLast(session);
+  const current = session ?? last;
+  if (!current) throw new Error("useSession is used outside the signed-in screens.");
+  return current;
 }

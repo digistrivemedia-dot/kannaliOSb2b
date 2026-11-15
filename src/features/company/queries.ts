@@ -21,7 +21,7 @@ import {
 } from "@/features/company/api";
 import type { BranchInput, CompanyUserInput } from "@/features/company/types";
 
-export const companyKeys = {
+const companyKeys = {
   branches: ["company", "branches"] as const,
   garageBranches: ["company", "garage-branches"] as const,
   users: ["company", "users"] as const,

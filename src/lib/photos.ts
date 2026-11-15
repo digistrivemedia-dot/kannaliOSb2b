@@ -26,7 +26,7 @@ const ATTEMPTS = [
  * A photo as the inline data URL the API stores (`data:image/jpeg;base64,…`), made small enough for
  * `maxBytes`. Links to photos the API already has are passed through unchanged.
  */
-export async function toDataUrl(uri: string, maxBytes: number): Promise<string> {
+async function toDataUrl(uri: string, maxBytes: number): Promise<string> {
   if (/^https?:\/\//.test(uri) || uri.startsWith("data:")) return uri;
   let last = "";
   for (const attempt of ATTEMPTS) {

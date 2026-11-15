@@ -1,0 +1,47 @@
+{
+  "id": "prd_024",
+  "partNumber": "BAJ25583",
+  "name": "Bajaj Genuine Front Brake Pads, Pulsar NS200",
+  "brand": "Bajaj Genuine Parts",
+  "category": {
+    "id": "cat_brakes",
+    "name": "Brakes"
+  },
+  "description": "Bajaj Genuine Front Brake Pads, Pulsar NS200. Genuine stock supplied by Kannali Garage with a GST invoice.",
+  "hsnCode": "87083000",
+  "gstRatePercent": 18,
+  "mrpInPaise": 52000,
+  "b2cPriceInPaise": 41525,
+  "businessPriceInPaise": 35712,
+  "unit": "piece",
+  "packSize": 1,
+  "stockByBranch": [
+    {
+      "branchId": "bus_004_main",
+      "quantity": 25
+    },
+    {
+      "branchId": "bus_004_br1",
+      "quantity": 25
+    }
+  ],
+  "compatibleVehicles": [
+    {
+      "id": "vm_bajaj-pulsar-ns200",
+      "type": "bike",
+      "brand": "Bajaj",
+      "model": "Pulsar NS200"
+    }
+  ],
+  "images": ["http://localhost:4000/files/public/2026/11/42a8c92f899642f46c925ed0f2d324b3.jpg"],
+  "specs": [
+    {
+      "label": "Brand",
+      "value": "Bajaj Genuine Parts"
+    },
+    {
+      "label": "Type",
+      "value": "Brake pads"
+    }
+  ]
+}

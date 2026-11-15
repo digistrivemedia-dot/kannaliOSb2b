@@ -61,7 +61,7 @@ export function EstimateLineEditor({
           </Text>
         </View>
         <Text variant="small" tone="muted">
-          Booked by the customer at this price (excl. GST). It can't be changed.
+          Booked by the customer at this price (excl. GST). It can’t be changed.
         </Text>
       </Card>
     );

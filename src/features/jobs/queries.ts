@@ -38,7 +38,7 @@ import { nextPage } from "@/lib/paging";
 
 type ListFilters = JobCardFilters & { from?: string; to?: string };
 
-export const jobKeys = {
+const jobKeys = {
   all: ["jobs"] as const,
   list: (filters: ListFilters) => ["jobs", "list", filters] as const,
   pages: (filters: ListFilters) => ["jobs", "pages", filters] as const,
@@ -129,7 +129,7 @@ export function useTechnicians(branchId: string, { enabled = true } = {}) {
  * After any change to a job: the card answers itself (so it shows at once), and every list and
  * count is out of date.
  */
-export function useJobChanged() {
+function useJobChanged() {
   const queryClient = useQueryClient();
   return (job: JobCard) => {
     queryClient.setQueryData(jobKeys.detail(job.id), job);

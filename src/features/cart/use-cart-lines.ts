@@ -8,7 +8,7 @@ import { apiClient } from "@/lib/api-client";
 import { formatCount } from "@/lib/format";
 import { calculateOrderTotals, DEFAULT_DELIVERY_RULE, type DeliveryRule } from "@/lib/pricing";
 
-export type CartLine = { product: Product; quantity: number; stock: number; issue: string | null };
+type CartLine = { product: Product; quantity: number; stock: number; issue: string | null };
 
 /** Units of a product at the delivery branch. */
 export function stockAt(product: Pick<Product, "stockByBranch">, branchId: string): number {
@@ -19,7 +19,7 @@ export function stockAt(product: Pick<Product, "stockByBranch">, branchId: strin
  * What stops a line being ordered. The server refuses more than the branch's stock, so a short line
  * blocks checkout until it's lowered (the website let it through with a note).
  */
-export function lineIssue(product: Product, quantity: number, stock: number): string | null {
+function lineIssue(product: Product, quantity: number, stock: number): string | null {
   if (stock === 0)
     return "Out of stock at your delivery branch. Remove it or choose another branch.";
   if (quantity > stock)

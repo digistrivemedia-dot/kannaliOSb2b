@@ -30,7 +30,7 @@ const TAB_PERMISSION: Partial<Record<TabKey, Permission>> = {
 
 const MAX_TABS = 4;
 
-export type Tabs = {
+type Tabs = {
   /** The bottom tabs, ending with More (or Account for businesses that aren't garages). */
   tabs: TabKey[];
   /** Tabs that didn't fit: More lists them first. */
@@ -51,7 +51,7 @@ export function tabsFor(roles: readonly Role[], businessType: BusinessType): Tab
   return { tabs: [...allowed.slice(0, MAX_TABS), "more"], inMore: allowed.slice(MAX_TABS) };
 }
 
-export const TAB_LABELS: Record<TabKey, string> = {
+const TAB_LABELS: Record<TabKey, string> = {
   today: "Today",
   jobs: "Jobs",
   "my-jobs": "My jobs",

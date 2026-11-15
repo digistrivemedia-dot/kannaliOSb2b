@@ -10,7 +10,7 @@ import {
 import type { CatalogFilters } from "@/features/catalog/types";
 import { nextPage } from "@/lib/paging";
 
-export const catalogKeys = {
+const catalogKeys = {
   products: (filters: CatalogFilters) => ["catalog", "products", filters] as const,
   product: (id: string) => ["catalog", "product", id] as const,
 };

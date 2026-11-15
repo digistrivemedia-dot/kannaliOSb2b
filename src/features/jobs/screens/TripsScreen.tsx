@@ -102,7 +102,7 @@ function TripCard({ job }: { job: JobCardSummary }) {
       ) : null}
       {cashDue ? (
         <Text variant="small" weight="semibold" tone="warning">
-          If the bill isn't paid: collect up to {formatPrice(cashDue)} at the door.
+          If the bill isn’t paid: collect up to {formatPrice(cashDue)} at the door.
         </Text>
       ) : null}
       <Button

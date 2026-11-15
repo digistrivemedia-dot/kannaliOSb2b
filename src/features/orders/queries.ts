@@ -4,12 +4,18 @@ import { cancelOrder, getOrder, getOrders, payOrderDemo, placeOrder } from "@/fe
 import type { CancellationReason, OrderFilters } from "@/features/orders/types";
 import { nextPage } from "@/lib/paging";
 
-export const orderKeys = {
+const orderKeys = {
   all: ["orders"] as const,
   list: (filters: OrderFilters) => ["orders", "list", filters] as const,
   pages: (filters: OrderFilters) => ["orders", "pages", filters] as const,
   detail: (id: string) => ["orders", "detail", id] as const,
 };
+
+/** For a screen's pull to refresh when an order list on it loads itself (Recent orders). */
+export function useRefetchOrders() {
+  const queryClient = useQueryClient();
+  return () => queryClient.refetchQueries({ queryKey: orderKeys.all, type: "active" });
+}
 
 export function useOrders(filters: OrderFilters, { enabled = true } = {}) {
   return useQuery({

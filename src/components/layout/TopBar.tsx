@@ -3,13 +3,13 @@ import { Bell, ChevronDown, MapPin, ShoppingCart } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { plannedHref } from "@/components/layout/ComingSoon";
 import { IconButton } from "@/components/ui/IconButton";
 import { Text } from "@/components/ui/Text";
 import { can } from "@/features/auth/permissions";
 import { useSession } from "@/features/auth/store";
 import { useCartCount } from "@/features/cart/store";
 import { useActiveBranch } from "@/features/company/use-active-branch";
+import { useUnreadCount } from "@/features/notifications/queries";
 import { colors } from "@/lib/theme";
 
 type TopBarProps = {
@@ -22,6 +22,7 @@ type TopBarProps = {
 /** The navy bar of the main tabs: the branch (owners tap it to switch), notifications and the title. */
 export function TopBar({ title, subtitle, showCart = false }: TopBarProps) {
   const cartCount = useCartCount();
+  const unread = useUnreadCount();
   const insets = useSafeAreaInsets();
   const session = useSession();
   const branch = useActiveBranch();
@@ -57,9 +58,10 @@ export function TopBar({ title, subtitle, showCart = false }: TopBarProps) {
           )}
           <IconButton
             icon={Bell}
-            label="Notifications"
+            label={unread ? `Notifications, ${unread} unread` : "Notifications"}
             tone="inverse"
-            onPress={() => router.push(plannedHref("G86"))}
+            badge={unread}
+            onPress={() => router.push("/notifications")}
           />
         </View>
       </View>

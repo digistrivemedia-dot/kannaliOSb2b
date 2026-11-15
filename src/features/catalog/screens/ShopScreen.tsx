@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import { FilePlus2, ListOrdered, RotateCcw } from "lucide-react-native";
+import { FilePlus2, ListOrdered } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
 
@@ -9,16 +9,15 @@ import { Section } from "@/components/layout/Section";
 import { TopBar } from "@/components/layout/TopBar";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { ListRow } from "@/components/ui/ListRow";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Text } from "@/components/ui/Text";
 import { useProductFilters } from "@/features/catalog/filter-store";
 import { useCatalogFilters, useOffers } from "@/features/catalog/queries";
-import { useOrders } from "@/features/orders/queries";
-import { useReorder } from "@/features/orders/use-reorder";
-import { formatDate, formatPrice } from "@/lib/format";
+import { RecentOrders } from "@/features/orders/components/RecentOrders";
+import { useRefetchOrders } from "@/features/orders/queries";
 import { radius } from "@/lib/theme";
 
 /** G50: search by name or part number, order by part number, categories, recent orders with Reorder, offers. */
@@ -26,8 +25,7 @@ export function ShopScreen() {
   const [search, setSearch] = useState("");
   const filters = useCatalogFilters();
   const offers = useOffers();
-  const recent = useOrders({ sort: "placedAt", order: "desc", pageSize: 3 });
-  const { reorder, reorderingId } = useReorder();
+  const refetchOrders = useRefetchOrders();
 
   const openProducts = (params: { q?: string; categoryId?: string }) => {
     useProductFilters.getState().set({ categoryId: params.categoryId, inStockOnly: false });
@@ -38,7 +36,7 @@ export function ShopScreen() {
     <Screen
       inTabs
       header={<TopBar title="Shop" subtitle="Your business prices, excl. GST" showCart />}
-      onRefresh={() => Promise.all([filters.refetch(), offers.refetch(), recent.refetch()])}
+      onRefresh={() => Promise.all([filters.refetch(), offers.refetch(), refetchOrders()])}
     >
       <SearchBar value={search} onChangeText={setSearch} placeholder="Part name or number" />
       {search.trim() ? (
@@ -95,6 +93,13 @@ export function ShopScreen() {
               <Skeleton key={key} className="h-12 w-[48%]" />
             ))}
           </View>
+        ) : filters.isError ? (
+          <ErrorState
+            error={filters.error}
+            onRetry={() => void filters.refetch()}
+            retrying={filters.isRefetching}
+            what="the categories"
+          />
         ) : (
           <View className="flex-row flex-wrap gap-2">
             {(filters.data?.categories ?? []).map((category) => (
@@ -113,44 +118,7 @@ export function ShopScreen() {
         )}
       </Section>
 
-      <Section
-        title="Recent orders"
-        action={{ label: "All orders", onPress: () => router.push("/orders") }}
-      >
-        {recent.data?.items.length ? (
-          <View className="gap-3">
-            {recent.data.items.map((order) => (
-              <Card key={order.id} className="gap-2">
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={() => router.push({ pathname: "/order/[id]", params: { id: order.id } })}
-                  className="gap-1"
-                >
-                  <View className="flex-row items-center justify-between">
-                    <Text weight="semibold">{order.number}</Text>
-                    <StatusBadge status={order.status} />
-                  </View>
-                  <Text variant="small" tone="muted">
-                    {formatDate(order.placedAt)} · {order.itemCount} items ·{" "}
-                    {formatPrice(order.totalInPaise)} incl. GST
-                  </Text>
-                </Pressable>
-                <Button
-                  variant="outline"
-                  icon={RotateCcw}
-                  label="Reorder"
-                  onPress={() => void reorder(order.id)}
-                  loading={reorderingId === order.id}
-                />
-              </Card>
-            ))}
-          </View>
-        ) : (
-          <Text tone="muted">
-            {recent.isPending ? "Loading…" : "Your orders show here, ready to order again."}
-          </Text>
-        )}
-      </Section>
+      <RecentOrders />
     </Screen>
   );
 }

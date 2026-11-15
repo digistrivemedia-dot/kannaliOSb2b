@@ -29,7 +29,7 @@ const normalise = (partNumber: string) => partNumber.trim().toUpperCase();
  * "AMA93795 4", "AMA93795, 4" or "AMA93795<tab>4", one per line (copied from a spreadsheet or a
  * message). A line without a number orders one.
  */
-export function parsePastedList(text: string): PartRow[] {
+function parsePastedList(text: string): PartRow[] {
   return text
     .split(/\r?\n/)
     .map((line) => line.trim())

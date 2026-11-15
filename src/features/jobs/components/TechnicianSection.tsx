@@ -24,7 +24,7 @@ export function TechnicianSection({ job, isDone }: { job: JobCard; isDone: boole
             <Text weight="semibold">{job.technician?.name ?? "Not assigned yet"}</Text>
             {job.technician && job.status === "approved" ? (
               <Text variant="small" tone="muted">
-                Hasn't accepted the job yet
+                Hasn’t accepted the job yet
               </Text>
             ) : null}
           </View>

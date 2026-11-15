@@ -135,7 +135,7 @@ const JOB_STAGES = [
   { key: "handover", label: "Handover" },
 ] as const;
 
-export type JobStage = "pickup" | (typeof JOB_STAGES)[number]["key"];
+type JobStage = "pickup" | (typeof JOB_STAGES)[number]["key"];
 
 /** A pick-up & drop job starts with the pick-up, and its handover is the delivery. */
 export function getJobStages(job: Pick<JobCard, "pickupDrop">): { key: JobStage; label: string }[] {
@@ -191,7 +191,7 @@ export function sumLines(lines: EstimateLine[]) {
 }
 
 /** Jobs still in the garage's hands. */
-export const ACTIVE_JOB_STATUSES = JOB_FLOW.filter(
+const ACTIVE_JOB_STATUSES = JOB_FLOW.filter(
   (status) => status !== "booked" && status !== "completed",
 );
 
@@ -246,7 +246,7 @@ export const INSPECTION_CHECKLIST: { area: string; items: string[] }[] = [
 ];
 
 /** Standard quality checks, after the job's own work lines (website `QUALITY_CHECKLIST`). */
-export const QUALITY_CHECKLIST = [
+const QUALITY_CHECKLIST = [
   "Road test done",
   "No oil or fuel leaks",
   "Brakes bite evenly",

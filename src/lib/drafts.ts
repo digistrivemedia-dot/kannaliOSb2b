@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -35,14 +35,15 @@ export function savedDraft<T>(key: string): T | undefined {
 
 /** Saves the form as it is typed; call `clearDraft(key)` once it has been sent. */
 export function useFormDraft<T extends FieldValues>(key: string, form: UseFormReturn<T>) {
-  const keyRef = useRef(key);
-  keyRef.current = key;
-  useEffect(() => {
-    const subscription = form.watch((values) =>
-      useDraftStore.getState().save(keyRef.current, values),
-    );
-    return () => subscription.unsubscribe();
-  }, [form]);
+  const { subscribe } = form;
+  useEffect(
+    () =>
+      subscribe({
+        formState: { values: true },
+        callback: ({ values }) => useDraftStore.getState().save(key, values),
+      }),
+    [subscribe, key],
+  );
 }
 
 export function clearDraft(key: string) {

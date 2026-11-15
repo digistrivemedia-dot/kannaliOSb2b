@@ -51,7 +51,7 @@ export function DeclineBookingScreen() {
     <View className="flex-1 bg-white" style={{ paddingBottom: Math.max(insets.bottom, 16) }}>
       <ScrollView contentContainerClassName="gap-2 px-4 pt-6" keyboardShouldPersistTaps="handled">
         <Text variant="heading" accessibilityRole="header">
-          Why can't you take it?
+          Why can’t you take it?
         </Text>
         <Text variant="small" tone="muted">
           The customer sees this reason.

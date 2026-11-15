@@ -13,7 +13,7 @@ import { nextPage } from "@/lib/paging";
 
 type ListFilters = BookingFilters & { q?: string };
 
-export const bookingKeys = {
+const bookingKeys = {
   all: ["bookings"] as const,
   list: (filters: ListFilters) => ["bookings", "list", filters] as const,
   pages: (filters: ListFilters) => ["bookings", "pages", filters] as const,

@@ -80,7 +80,7 @@ export function ForgotPasswordScreen() {
       }
     >
       <Text tone="muted">
-        Enter your business email. We'll send you a link to set a new password.
+        Enter your business email. We’ll send you a link to set a new password.
       </Text>
       {formError ? <FormAlert message={formError} /> : null}
       <Controller

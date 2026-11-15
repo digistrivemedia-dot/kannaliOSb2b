@@ -1,0 +1,231 @@
+{
+  "id": "jcd_2d7186a76392280f0af6",
+  "number": "JC-2026-0058",
+  "branch": {
+    "id": "br-hsr",
+    "name": "HSR Layout"
+  },
+  "source": "walk_in",
+  "customer": {
+    "id": "cus_bb1725896eb426e8df12",
+    "name": "Prakash Rao",
+    "phone": "+919664072138"
+  },
+  "vehicle": {
+    "id": "veh_95e04903162789966614",
+    "plate": "KA15HW7228",
+    "type": "bike",
+    "make": "Royal Enfield",
+    "model": "Classic 350"
+  },
+  "status": "quality_check",
+  "createdAt": "2026-11-14T19:15:00.576Z",
+  "technician": {
+    "id": "usr-venkatesh",
+    "name": "Venkatesh Gowda"
+  },
+  "complaints": [],
+  "checkIn": {
+    "at": "2026-11-14T19:15:00.620Z",
+    "by": {
+      "id": "usr-ravi",
+      "name": "Ravi Shankar"
+    },
+    "odometerKm": 16921,
+    "fuelLevel": "quarter",
+    "damages": [
+      {
+        "id": "d1",
+        "area": "Left side panel",
+        "note": "Small scratch",
+        "photos": [
+          "http://localhost:4000/files/private/2026/11/b7389d78211e28ff90704f2d3c4ffa12.png?expires=1794685720&name=damages-1&signature=c0d88e30da69a850be6a6c0cf97762854ba824b10b5411c3aca10d80eaae67a2"
+        ]
+      }
+    ],
+    "complaints": [],
+    "photos": [
+      "http://localhost:4000/files/private/2026/11/de8d5117f90470655bd5c216b7205a4e.png?expires=1794685720&name=photos-1&signature=693e5a86593b41380998e77fa6048b802b16288c5313e1ae5a84a1436fbdc01d",
+      "http://localhost:4000/files/private/2026/11/15b9102246895bc9ad25cfaabe7e35fc.png?expires=1794685720&name=photos-2&signature=92533c8e02bd3ddec9cf94531c40b9f7aee0ecdf033e8f91a2db4f650117f259"
+    ]
+  },
+  "inspection": {
+    "at": "2026-11-14T19:15:00.652Z",
+    "by": {
+      "id": "usr-ravi",
+      "name": "Ravi Shankar"
+    },
+    "items": [
+      {
+        "id": "i1",
+        "area": "Engine",
+        "name": "Engine oil level and colour",
+        "result": "replace",
+        "photos": []
+      },
+      {
+        "id": "i2",
+        "area": "Brakes",
+        "name": "Front brake",
+        "result": "attention",
+        "note": "Pads worn to 2 mm",
+        "photos": []
+      },
+      {
+        "id": "i3",
+        "area": "Brakes",
+        "name": "Rear brake",
+        "result": "ok",
+        "photos": []
+      },
+      {
+        "id": "i4",
+        "area": "Electricals",
+        "name": "Lights and indicators",
+        "result": "ok",
+        "photos": []
+      },
+      {
+        "id": "i5",
+        "area": "Electricals",
+        "name": "Battery and self start",
+        "result": "ok",
+        "photos": []
+      },
+      {
+        "id": "i6",
+        "area": "Tyres and wheels",
+        "name": "Front tyre tread and pressure",
+        "result": "ok",
+        "photos": []
+      },
+      {
+        "id": "i7",
+        "area": "Chain and transmission",
+        "name": "Chain slack and wear",
+        "result": "attention",
+        "note": "Needs adjusting",
+        "photos": []
+      },
+      {
+        "id": "i8",
+        "area": "Suspension and body",
+        "name": "Front forks",
+        "result": "ok",
+        "photos": []
+      }
+    ]
+  },
+  "estimate": {
+    "lines": [
+      {
+        "id": "l1",
+        "kind": "service",
+        "description": "General service",
+        "quantity": 1,
+        "unitPriceInPaise": 75000,
+        "gstRatePercent": 18,
+        "approval": "approved",
+        "isExtra": false,
+        "isDone": true
+      },
+      {
+        "id": "l2",
+        "kind": "part",
+        "description": "Engine oil 10W-30, 1 L",
+        "partNumber": "CAS10W301L",
+        "quantity": 1,
+        "unitPriceInPaise": 42000,
+        "gstRatePercent": 18,
+        "approval": "approved",
+        "isExtra": false,
+        "isDone": true
+      },
+      {
+        "id": "l3",
+        "kind": "part",
+        "description": "Front brake pads",
+        "partNumber": "BRP-ACT6G-F",
+        "quantity": 1,
+        "unitPriceInPaise": 38000,
+        "gstRatePercent": 18,
+        "approval": "approved",
+        "isExtra": false,
+        "isDone": true
+      },
+      {
+        "id": "l4",
+        "kind": "labour",
+        "description": "Chain clean and adjust",
+        "quantity": 1,
+        "unitPriceInPaise": 15000,
+        "gstRatePercent": 18,
+        "approval": "rejected",
+        "isExtra": false,
+        "isDone": false
+      },
+      {
+        "id": "l5",
+        "kind": "consumable",
+        "description": "Chain lube",
+        "quantity": 1,
+        "unitPriceInPaise": 9000,
+        "gstRatePercent": 18,
+        "approval": "approved",
+        "isExtra": false,
+        "isDone": true
+      }
+    ],
+    "sentAt": "2026-11-14T19:15:00.679Z",
+    "approvalNote": "By phone",
+    "decidedAt": "2026-11-14T19:15:00.722Z"
+  },
+  "progress": [
+    {
+      "id": "prg_c50b528dfa69d15927ec",
+      "at": "2026-11-14T19:15:00.847Z",
+      "by": {
+        "id": "usr-venkatesh",
+        "name": "Venkatesh Gowda"
+      },
+      "text": "Old oil drained, service started",
+      "photos": [
+        "http://localhost:4000/files/private/2026/11/a32ad13b5ed51a041a92c4dcf6cc3240.png?expires=1794685720&name=photos-1&signature=34bc1a19b887681d1a543fd5947e9ae46dcf633f0c4218d9fefc17968bae2081"
+      ],
+      "isExtraWork": false
+    }
+  ],
+  "qualityChecks": [],
+  "timeline": [
+    {
+      "status": "vehicle_received",
+      "at": "2026-11-14T19:15:00.573Z",
+      "note": "Walk-in, received by Ravi Shankar"
+    },
+    {
+      "status": "job_card_created",
+      "at": "2026-11-14T19:15:00.620Z"
+    },
+    {
+      "status": "inspection",
+      "at": "2026-11-14T19:15:00.652Z"
+    },
+    {
+      "status": "awaiting_approval",
+      "at": "2026-11-14T19:15:00.679Z"
+    },
+    {
+      "status": "approved",
+      "at": "2026-11-14T19:15:00.722Z"
+    },
+    {
+      "status": "in_progress",
+      "at": "2026-11-14T19:15:00.777Z",
+      "note": "Accepted by Venkatesh Gowda"
+    },
+    {
+      "status": "quality_check",
+      "at": "2026-11-14T19:15:00.956Z"
+    }
+  ]
+}

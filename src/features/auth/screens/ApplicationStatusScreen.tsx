@@ -122,7 +122,7 @@ export function ApplicationStatusScreen() {
               <Card className="gap-2">
                 <Text>{application.rejectionReason ?? "Kannali didn't give a reason."}</Text>
                 <Text variant="small" tone="muted">
-                  You can apply again at any time; we'll fill in your earlier details.
+                  You can apply again at any time; we’ll fill in your earlier details.
                 </Text>
               </Card>
             </Section>

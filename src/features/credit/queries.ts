@@ -7,7 +7,7 @@ import {
   payInvoices,
 } from "@/features/credit/api";
 
-export const creditKeys = {
+const creditKeys = {
   all: ["credit"] as const,
   summary: ["credit", "summary"] as const,
 };

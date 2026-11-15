@@ -22,7 +22,6 @@ import {
   type LucideIcon,
 } from "lucide-react-native";
 
-import { plannedHref } from "@/components/layout/ComingSoon";
 import { can, type Permission } from "@/features/auth/permissions";
 import type { TabKey } from "@/features/auth/tabs";
 import type { Session } from "@/features/auth/types";
@@ -82,21 +81,21 @@ const GROUPS: MenuGroup[] = [
       {
         label: "Customers",
         icon: Users,
-        href: plannedHref("G82"),
+        href: "/customers",
         permission: "customers:view",
         garageOnly: true,
       },
       {
         label: "Reviews",
         icon: Star,
-        href: plannedHref("G84"),
+        href: "/reviews",
         permission: "reviews:view",
         garageOnly: true,
       },
       {
         label: "Reports",
         icon: BarChart3,
-        href: plannedHref("G85"),
+        href: "/reports",
         permission: "reports:view",
         garageOnly: true,
       },
@@ -170,7 +169,9 @@ export function moreMenu(session: Session, tabs: readonly TabKey[]): MenuGroup[]
         can(session.roles, item.permission) &&
         (!item.garageOnly || isGarage) &&
         (!item.requiresCredit || session.business.creditEnabled) &&
-        !(item.tab && tabs.includes(item.tab)),
+        !(item.tab && tabs.includes(item.tab)) &&
+        // Whoever has the Jobs tab sees every job there; My jobs would repeat it (as in tabsFor).
+        !(item.tab === "my-jobs" && tabs.includes("jobs")),
     ),
   })).filter((group) => group.items.length > 0);
 }

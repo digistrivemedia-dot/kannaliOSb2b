@@ -3,7 +3,6 @@ import { Bell, LogOut, Palette, UserRound } from "lucide-react-native";
 import { useState } from "react";
 import { View } from "react-native";
 
-import { plannedHref } from "@/components/layout/ComingSoon";
 import { Screen } from "@/components/layout/Screen";
 import { Section } from "@/components/layout/Section";
 import { TopBar } from "@/components/layout/TopBar";
@@ -34,7 +33,7 @@ export function MoreScreen() {
   return (
     <Screen inTabs header={<TopBar title={tabLabel("more", business.type)} />}>
       <Card
-        onPress={() => router.push(plannedHref("G87"))}
+        onPress={() => router.push("/account")}
         accessibilityLabel="My account"
         className="flex-row items-center gap-3"
       >
@@ -67,12 +66,12 @@ export function MoreScreen() {
             icon={UserRound}
             title="My account"
             subtitle="Your details and password"
-            onPress={() => router.push(plannedHref("G87"))}
+            onPress={() => router.push("/account")}
           />
           <ListRow
             icon={Bell}
             title="Notifications"
-            onPress={() => router.push(plannedHref("G86"))}
+            onPress={() => router.push("/notifications")}
             divided
           />
           {__DEV__ && (

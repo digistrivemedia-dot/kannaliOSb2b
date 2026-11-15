@@ -22,6 +22,7 @@ import { useCartLines, useDeliveryRule } from "@/features/cart/use-cart-lines";
 import { BankDetails } from "@/features/checkout/components/BankDetails";
 import { useBranches } from "@/features/company/queries";
 import { useCreditSummary } from "@/features/credit/queries";
+import { creditBlockReason } from "@/features/credit/utils";
 import { usePlaceOrder } from "@/features/orders/queries";
 import type { PlaceOrderRequest } from "@/features/orders/types";
 import { useQuotation } from "@/features/quotations/queries";
@@ -68,13 +69,7 @@ export function CheckoutScreen() {
       )
     : cart.totals;
   const branchId = quoted ? quoted.branch.id : cart.branchId;
-  const creditShort = credit.data ? credit.data.availableInPaise < totals.totalInPaise : false;
-  const creditOverdue = (credit.data?.overdueInvoiceCount ?? 0) > 0;
-  const creditReason = creditOverdue
-    ? "Pay your overdue invoices first."
-    : creditShort
-      ? `Only ${formatPrice(credit.data?.availableInPaise ?? 0)} of credit left.`
-      : null;
+  const creditReason = creditBlockReason(credit.data, totals.totalInPaise);
 
   const submit = () => {
     setError(null);

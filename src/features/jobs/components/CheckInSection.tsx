@@ -15,7 +15,7 @@ export function CheckInSection({ job, isDone }: { job: JobCard; isDone: boolean 
   if (!checkIn) {
     return (
       <Section title="Check-in">
-        <NotYet>The vehicle hasn't been checked in yet.</NotYet>
+        <NotYet>The vehicle hasn’t been checked in yet.</NotYet>
       </Section>
     );
   }

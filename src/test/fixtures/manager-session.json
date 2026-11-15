@@ -1,0 +1,32 @@
+{
+  "user": {
+    "id": "usr-ravi",
+    "name": "Ravi Shankar",
+    "email": "ravi@srisaiworks.example.com",
+    "phone": "+919845213367"
+  },
+  "business": {
+    "id": "bus_001",
+    "name": "Sri Sai Two Wheeler Works",
+    "type": "garage",
+    "gstin": "29AAKFS4821M1Z3",
+    "pan": "AAKFS4821M",
+    "email": "mahesh@srisaitwowheelerwo.in",
+    "phone": "+919845321098",
+    "registeredAddress": {
+      "line1": "No. 14, 2nd Main",
+      "line2": "Hanumanthanagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pin": "560019"
+    },
+    "approvedAt": "2026-05-28T05:30:00.000Z",
+    "discountPercent": 12,
+    "creditEnabled": false,
+    "photos": [],
+    "documents": []
+  },
+  "roles": ["manager"],
+  "branchId": "br-hsr",
+  "approvalStatus": "approved"
+}

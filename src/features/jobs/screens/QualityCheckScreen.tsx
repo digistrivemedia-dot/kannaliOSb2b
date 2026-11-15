@@ -16,9 +16,11 @@ import { showToast } from "@/components/ui/Toast";
 import { StepNotReady } from "@/features/jobs/components/StepNotReady";
 import { WithJob } from "@/features/jobs/components/WithJob";
 import { useRecordQualityCheck } from "@/features/jobs/queries";
+import { qualityCheckSchema } from "@/features/jobs/schemas";
 import type { JobCard } from "@/features/jobs/types";
 import { qualityChecklistFor } from "@/features/jobs/utils";
 import { errorMessage } from "@/lib/api-client";
+import { firstProblem } from "@/lib/validation";
 
 /** G39: the job's own work, then the standard checks. Pass → Ready, or Rework with a note → back to the technician. */
 export function QualityCheckScreen() {
@@ -49,10 +51,9 @@ function QualityCheckForm({ job }: { job: JobCard }) {
   const allOk = checks.every((check) => check.isOk);
 
   const submit = (result: "pass" | "rework") => {
-    if (result === "pass" && !allOk)
-      return setError("Tick every check before passing the vehicle.");
-    if (result === "rework" && note.trim().length < 3) return setError("Say what needs redoing.");
-    setError(null);
+    const problem = firstProblem(qualityCheckSchema, { result, items: checks, note });
+    setError(problem);
+    if (problem) return;
     record.mutate(
       { items: checks, result, note: note.trim() || undefined },
       {

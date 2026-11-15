@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,22 +12,23 @@ import { Text } from "@/components/ui/Text";
 import { showToast } from "@/components/ui/Toast";
 import { BankDetails } from "@/features/checkout/components/BankDetails";
 import { useCreditInvoices, usePayInvoices } from "@/features/credit/queries";
+import { payDuesSchema } from "@/features/credit/schemas";
 import { errorMessage } from "@/lib/api-client";
 import { formatDate, formatPrice } from "@/lib/format";
+import { useSafeParam } from "@/lib/params";
+import { firstProblem } from "@/lib/validation";
 
 /**
  * G71 (form sheet): pick invoices (or oldest first), the total, and pay. Bank transfers wait for Kannali to
  * confirm. Online needs Razorpay's window (Phase 10): the backend has no demo payment for dues (BN-12).
  */
 export function PayDuesScreen() {
-  const params = useLocalSearchParams<{ invoice?: string }>();
+  const invoiceId = useSafeParam("invoice");
   const dues = useCreditInvoices("unpaid");
   const pay = usePayInvoices();
   const insets = useSafeAreaInsets();
   const invoices = [...(dues.data ?? [])].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
-  const [picked, setPicked] = useState<Set<string>>(
-    () => new Set(typeof params.invoice === "string" ? [params.invoice] : []),
-  );
+  const [picked, setPicked] = useState<Set<string>>(() => new Set(invoiceId ? [invoiceId] : []));
   const [reference, setReference] = useState("");
   const [error, setError] = useState<string | null>(null);
   const chosen = invoices.filter((invoice) => picked.has(invoice.id));
@@ -42,9 +43,12 @@ export function PayDuesScreen() {
     });
 
   const submit = () => {
-    if (chosen.length === 0) return setError("Choose at least one invoice.");
-    if (reference.trim().length < 3) return setError("Enter the UTR of your transfer.");
-    setError(null);
+    const problem = firstProblem(payDuesSchema, {
+      invoiceIds: chosen.map((invoice) => invoice.id),
+      reference,
+    });
+    setError(problem);
+    if (problem) return;
     pay.mutate(
       {
         invoiceIds: chosen.map((invoice) => invoice.id),

@@ -2,7 +2,7 @@ import { ScrollView } from "react-native";
 
 import { Chip } from "@/components/ui/Chip";
 
-export type FilterChipOption<T extends string> = { value: T; label: string; count?: number };
+type FilterChipOption<T extends string> = { value: T; label: string; count?: number };
 
 type FilterChipsProps<T extends string> = {
   /** Read out before the chips, e.g. "Status". */

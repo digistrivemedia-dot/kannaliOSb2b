@@ -18,12 +18,14 @@ import { Text } from "@/components/ui/Text";
 import { showToast } from "@/components/ui/Toast";
 import { useOrder } from "@/features/orders/queries";
 import { useCreateReturn, useReturnedQuantities } from "@/features/returns/queries";
+import { returnRequestSchema } from "@/features/returns/schemas";
 import type { ReturnReason } from "@/features/returns/types";
 import { MAX_RETURN_PHOTO_BYTES, RETURN_REASONS } from "@/features/returns/utils";
 import { errorMessage } from "@/lib/api-client";
 import { formatPrice } from "@/lib/format";
 import { useSafeParam } from "@/lib/params";
 import { toDataUrls } from "@/lib/photos";
+import { firstProblem } from "@/lib/validation";
 
 const REASONS = Object.keys(RETURN_REASONS) as ReturnReason[];
 
@@ -47,9 +49,10 @@ export function ReturnRequestScreen() {
 
   const send = async () => {
     if (!order.data) return;
-    if (chosen.length === 0) return setError("Choose what you're returning.");
-    if (!reason) return setError("Choose why.");
-    setError(null);
+    const items = chosen.map(([productId, quantity]) => ({ productId, quantity }));
+    const problem = firstProblem(returnRequestSchema, { items, reason });
+    setError(problem);
+    if (problem || !reason) return;
     setIsPreparing(true);
     try {
       const request = await create.mutateAsync({
@@ -57,7 +60,7 @@ export function ReturnRequestScreen() {
         reason,
         notes: notes.trim() || undefined,
         photos: await toDataUrls(photos, MAX_RETURN_PHOTO_BYTES),
-        items: chosen.map(([productId, quantity]) => ({ productId, quantity })),
+        items,
       });
       showToast({ message: `Return ${request.number} requested` });
       router.replace({ pathname: "/return/[id]", params: { id: request.id } });

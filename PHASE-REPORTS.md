@@ -283,3 +283,79 @@ booking to HSR Layout for the new-booking alert.
    - As `ganesh@`: Account → Credit → Pay dues → bank transfer reference → Payments shows it waiting.
    - As `mahesh@`: More → Team → Add person → the invite link prints in the backend's terminal.
    - As `mahesh@`: More → Garage profile → take a photo, add a service and a holiday → Save.
+
+## Phase 9: The rest, and every check
+
+1. **Built**
+   - G82 Customers, `/customers`: search by name, phone or plate, cards with call button, vehicles (plate chips),
+     jobs and last visit; main action "New walk-in" (BN-14).
+   - G83 Customer and vehicle history, `/customer/[id]`, and by plate `/vehicle/[plate]` (from a booking's
+     "Vehicle history"): details with Call, app account badge, every vehicle with its visits; this garage's visits
+     open their job card and show the amount, other garages' visits show without prices; a first-time plate says so.
+   - G84 Reviews, `/reviews`: average as a big figure, bars by stars, rating chips, branch chips (owners), list
+     newest first; a review opens its job card.
+   - G85 Reports, `/reports` + sheet `/reports-filters`: branch (or every branch) and dates (today, 7 / 30 days,
+     this / last month, or typed dates); tiles for jobs completed, revenue and average job (incl. GST), open jobs;
+     short lists of open jobs by status, technician workload and top services. Last choice kept on the phone.
+   - G86 Notifications, `/notifications`: newest first, unread dot and tint, tap marks read and opens the matching
+     screen (booking, job, order, return, quotation, payment), "Mark all read"; the top bar's bell shows the
+     unread count (checked every minute until push in Phase 10).
+   - G87 My account, `/account`: name, business, email, phone, own branch, roles with what each does, Change
+     password (BN-15), Sign out.
+   - "Coming soon" placeholders deleted (`ComingSoon`, `PlannedTab`, `/coming-soon`): every screen exists.
+   - dev-data: customer-app users bring vehicles in as walk-ins, the jobs complete and they leave reviews (4).
+2. **Differs from the plan**
+   - G82/G83 say "own, man"; the website's permissions (copied into `can()`) also give billing `customers:view`, and
+     the backend allows it, so billing sees Customers in More.
+   - Add customer: the API has no route for it (BN-14), so the main action starts a walk-in, which adds the customer.
+   - Change password: no signed-in route (BN-15), so it emails the user a link to set a new one.
+   - Found by the checks and fixed: Shop and Home showed "Your orders show here" / "Nothing needs you" when loading
+     failed and "Loading…" text instead of a skeleton (now one Recent orders block with all four states, and error
+     states for categories and Needs you now); the owner's More listed My jobs next to the Jobs tab; eight forms
+     validated by hand (pay dues, progress note, customer's answer, QC, collect payment, handover, return request,
+     report dates) now use zod schemas (§10); Pay dues read its `invoice` parameter unchecked; the booking alert's
+     memory wasn't cleared on sign-out; lint findings (refs and setState during render in `useSession`,
+     `useFormDraft`, the job list tab, react-hook-form `watch` in Register).
+3. **API gaps:** BN-14 (add a customer), BN-15 (change password while signed in).
+4. **New libraries:** `expo-system-ui` (Expo needs it for `userInterfaceStyle: "light"` to hold on Android; in
+   Expo Go). Dev only: `eslint` + `eslint-config-expo` (Lint check), `jest` + `jest-expo` +
+   `@react-native/jest-preset` + `@types/jest` + `@testing-library/react-native` (Tests check).
+5. **Check**
+   - Types: `tsc --noEmit` clean for the app and `scripts/`; fresh Android and iOS bundles (`expo export`).
+   - Lint: `expo lint` clean (no rules switched off; `require()` allowed only in `tailwind.config.ts` and
+     `jest.setup.ts`, where it's needed).
+   - Tests: 13 suites, 53 tests pass (`npm test`). Unit: `nextAction` (every status, roles, trips, closed reason),
+     `stepHref`, `can`, `tabsFor`, money and GST (per line, delivery, CGST/SGST split), estimate sums (approved
+     only, all rejected, lines being typed), credit at checkout, plates, the job form schemas, each demo login's
+     tabs and More menu. Flow (real screens on a fake API): sign in → Today; accept a booking (and too late);
+     walk-in → check-in → inspection → estimate → customer's answer → technician → QC pass → bill → cash → handover;
+     order by part number → checkout on credit (and credit short); a list through loading, offline, Try again,
+     empty and content.
+   - Accessibility (in code; no phones here): every touchable has a role and label, every field a label; all 17
+     colour pairs in use pass 4.5:1 (lowest: placeholder 4.76, success badge 4.79); every target is 48 or more
+     (Chip and the photo remove dot by hitSlop); text follows the phone's font size (figures stop at 1.6×, plates
+     at 1.4×). TalkBack and VoiceOver passes not done.
+   - Performance (in code): every long list is a FlashList with paging; images go through expo-image and photos are
+     shrunk before upload. Mid-range Android smoothness and a release-build cold start not measured (no phone, and
+     Expo Go isn't a release build).
+   - States: every data screen checked for skeleton, empty, error and offline (gaps above fixed); the offline
+     banner and "No connection" error come from the same network state.
+   - Security, §10 line by line: token only in expo-secure-store; the only `EXPO_PUBLIC_` value is the API address;
+     non-HTTPS addresses are refused outside development; every form validated with zod and every route parameter
+     checked; no `console.log` or personal data in logs; sign-out calls the backend, then clears the token, query
+     cache, AsyncStorage, drafts and every store. `npm audit`: no high or critical (3 moderate in production deps,
+     all in Expo's build-time fingerprint tool; fixing needs a breaking Expo downgrade).
+   - Roles: signed in as mahesh@, ravi@, venkatesh@, imran@, shilpa@, ganesh@, raghavendra@ and lakshmi@ on the
+     backend; roles match the seed (deepa@ is invited and can't sign in yet); each one's tabs and More menu are
+     locked in `src/features/more/menu.test.ts`.
+   - Clean-up: no `console.log`, no TODO; `knip` finds no unused files, exports or libraries beyond tooling false
+     positives (Babel/Metro configs, the Reanimated test double).
+   - Live flows on a fresh `dev:memory` + dev-data: Phase 8 41/41, Phase 9 30/30. The older Phase 3–7 scripts
+     re-run on today's data hit data-dependent checks (it's Sunday and HSR is closed, so "today's" bookings moved to
+     Monday; BN-05; a quotation and a rework job already further along); none of them run app code.
+6. **Commit:** `feat(garage): customers, reviews, reports, notifications, my account and every check` (the commit
+   with this report).
+7. **Lead to look at**
+   - As `mahesh@`: More → Reports → change to Last month and one branch; then More → Reviews.
+   - As `ravi@`: a new booking → Vehicle history; the bell's unread count, then Notifications → tap one.
+   - Settings → largest font size, then Today and a job card: tiles and the next-step bar should keep their shape.

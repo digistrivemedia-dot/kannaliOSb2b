@@ -1,0 +1,32 @@
+[
+  {
+    "id": "bus_004_main",
+    "name": "Yeshwanthpur",
+    "isMain": true,
+    "address": {
+      "line1": "No. 5, Tumkur Road",
+      "line2": "Yeshwanthpur",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pin": "560022"
+    },
+    "contactName": "Ganesh Bhat",
+    "contactPhone": "+919900654321",
+    "acceptingBookings": true
+  },
+  {
+    "id": "bus_004_br1",
+    "name": "Banashankari",
+    "isMain": false,
+    "address": {
+      "line1": "No. 101, 80 Feet Road",
+      "line2": "Banashankari 3rd Stage",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pin": "560085"
+    },
+    "contactName": "Ganesh Bhat",
+    "contactPhone": "+919900654321",
+    "acceptingBookings": true
+  }
+]

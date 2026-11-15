@@ -70,12 +70,6 @@ export const radius = {
   full: 9999,
 } as const;
 
-/** Tap targets and bars. */
-export const sizes = {
-  tap: 48,
-  mainButton: 56,
-} as const;
-
 export type Tone = "neutral" | "info" | "success" | "warning" | "danger";
 
 /** The strong colour and the -50 tint of each status tone. */

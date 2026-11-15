@@ -11,9 +11,11 @@ import { Radio } from "@/components/ui/Radio";
 import { Text } from "@/components/ui/Text";
 import { showToast } from "@/components/ui/Toast";
 import { useCollectPayment, useJobCard } from "@/features/jobs/queries";
+import { collectPaymentSchema } from "@/features/jobs/schemas";
 import { errorMessage } from "@/lib/api-client";
 import { formatPrice } from "@/lib/format";
 import { useSafeParam } from "@/lib/params";
+import { firstProblem } from "@/lib/validation";
 
 /**
  * How the customer pays (CLAUDE.md §8): online (a payment link or UPI to the garage), or at the counter in
@@ -50,11 +52,9 @@ export function CollectPaymentScreen() {
   const change = cashInPaise - due;
 
   const save = () => {
-    if (way !== "cash" && reference.trim().length < 6) {
-      return setError("Enter the UPI or payment reference from the customer's phone.");
-    }
-    if (way === "cash" && change < 0) return setError("That's less than the bill.");
-    setError(null);
+    const problem = firstProblem(collectPaymentSchema(due), { way, cashInPaise, reference });
+    setError(problem);
+    if (problem) return;
     collect.mutate(
       way === "cash"
         ? { method: "cash", cashReceivedInPaise: cashInPaise }

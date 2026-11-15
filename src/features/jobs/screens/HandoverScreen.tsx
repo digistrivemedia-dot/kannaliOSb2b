@@ -19,6 +19,7 @@ import { showToast } from "@/components/ui/Toast";
 import { StepNotReady } from "@/features/jobs/components/StepNotReady";
 import { WithJob } from "@/features/jobs/components/WithJob";
 import { useHandOver } from "@/features/jobs/queries";
+import { handoverSchema } from "@/features/jobs/schemas";
 import type { JobCard } from "@/features/jobs/types";
 import { MAX_JOB_PHOTO_BYTES, vehicleName } from "@/features/jobs/utils";
 import { errorMessage } from "@/lib/api-client";
@@ -26,6 +27,7 @@ import { indiaDateIn, maskTypedDate, parseTypedDate, toTypedDate } from "@/lib/d
 import { clearDraft, useDraftStore } from "@/lib/drafts";
 import { formatNumber, formatPrice } from "@/lib/format";
 import { toDataUrls } from "@/lib/photos";
+import { firstProblem } from "@/lib/validation";
 
 /** Website `HandoverForm`. */
 const CHECKLIST = [
@@ -91,16 +93,10 @@ function HandoverForm({ job }: { job: JobCard }) {
   const cashInPaise = Math.round(Number(draft.cash || 0) * 100);
 
   const submit = async () => {
-    if (!draft.checklist.every(Boolean))
-      return setError("Tick every item before handing the vehicle over.");
-    if (!/^\d{1,7}$/.test(draft.odometer))
-      return setError("Enter the odometer reading as it leaves.");
+    const problem = firstProblem(handoverSchema(cashDue), { ...draft, cashInPaise });
+    setError(problem);
+    if (problem) return;
     const nextDate = draft.nextDate ? parseTypedDate(draft.nextDate) : null;
-    if (draft.nextDate && !nextDate)
-      return setError("Enter the next service date as DD/MM/YYYY, or leave it empty.");
-    if (cashDue !== undefined && cashInPaise < cashDue)
-      return setError(`Collect ${formatPrice(cashDue)} in cash first.`);
-    setError(null);
     setIsPreparing(true);
     try {
       await handOver.mutateAsync({
@@ -152,7 +148,7 @@ function HandoverForm({ job }: { job: JobCard }) {
       {cashDue !== undefined ? (
         <Card className="gap-2 border-warning-500 bg-warning-50">
           <Text weight="semibold">
-            The bill isn't paid. Collect {formatPrice(cashDue)} incl. GST in cash.
+            The bill isn’t paid. Collect {formatPrice(cashDue)} incl. GST in cash.
           </Text>
           <NumberInput
             label="Cash received"

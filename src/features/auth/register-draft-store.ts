@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { EMPTY_REGISTRATION, type RegisterValues } from "@/features/auth/schemas";
 
 /** "new": a first application · "resubmit": correcting a sent-back one · "reapply": after a rejection. */
-export type RegisterMode = "new" | "resubmit" | "reapply";
+type RegisterMode = "new" | "resubmit" | "reapply";
 
 type RegisterDraft = {
   values: RegisterValues;

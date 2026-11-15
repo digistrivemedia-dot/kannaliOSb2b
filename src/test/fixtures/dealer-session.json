@@ -1,0 +1,32 @@
+{
+  "user": {
+    "id": "bus_004_u1",
+    "name": "Ganesh Bhat",
+    "email": "ganesh@vinayakamotors.in",
+    "phone": "+919900654321"
+  },
+  "business": {
+    "id": "bus_004",
+    "name": "Vinayaka Motors",
+    "type": "dealer",
+    "gstin": "29AAFFV9021H1Z5",
+    "pan": "AAFFV9021H",
+    "email": "ganesh@vinayakamotors.in",
+    "phone": "+919900654321",
+    "registeredAddress": {
+      "line1": "No. 5, Tumkur Road",
+      "line2": "Yeshwanthpur",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pin": "560022"
+    },
+    "approvedAt": "2026-06-15T05:30:00.000Z",
+    "discountPercent": 14,
+    "creditEnabled": true,
+    "photos": [],
+    "documents": []
+  },
+  "roles": ["owner"],
+  "branchId": "bus_004_main",
+  "approvalStatus": "approved"
+}

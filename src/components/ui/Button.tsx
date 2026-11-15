@@ -24,7 +24,7 @@ const SIZES = {
   regular: { box: "h-12 px-4", text: "body" },
 } as const;
 
-export type ButtonVariant = keyof typeof VARIANTS;
+type ButtonVariant = keyof typeof VARIANTS;
 
 type ButtonProps = {
   label: string;
